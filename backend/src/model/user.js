@@ -34,7 +34,7 @@ exports.createTable = () => {
 
 exports.findExistancy = ({email, userName}) => {
     return new Promise((resolve, reject) => {
-        con.query('SELECT * FROM user WHERE email = ? OR displayName = ?', [email, userName], (err, results) => {
+        con.query('SELECT * FROM user WHERE email = ? OR userName = ?', [email, userName], (err, results) => {
             if(err) reject(err);
             else resolve(results);
         });

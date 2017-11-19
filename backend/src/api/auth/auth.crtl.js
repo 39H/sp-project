@@ -17,19 +17,20 @@ exports.register = (req, res) => {
         (results) => {
             if(results.length > 0) {
                 const key = results[0].email === email ? 'email' : 'userName';
-                throw {code:409, body:{key}};
+                throw {status:409, body:{key}};
             }
             return user.register({email, password, displayName, userName});
         }
     ).catch((error) => {
         console.log('Failed to register');
-        let code = 400;
-        if(error.code) {
+        let status = 400;
+        if(error.status) {
+            console.log(error);
             let body = Object.assign({}, error.body);
-            code = error.code;
+            status = error.status;
             error = body;
         };
-        res.status(code).json(error);
+        res.status(status).json(error);
     }).then((result) => {
         console.log('OK');
         res.json({
