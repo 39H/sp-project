@@ -2,6 +2,8 @@
 require('dotenv').config();
 
 const express = require('express');
+const bodyParser = require('body-parser');
+
 const app = express();
 
 const api = require('./api');
@@ -10,6 +12,8 @@ const api = require('./api');
 const {
     PORT: port
 } = process.env;
+
+app.use(bodyParser.json());
 
 app.use('/api', api);
 

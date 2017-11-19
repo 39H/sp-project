@@ -1,8 +1,8 @@
 const express = require('express');
 const auth = express.Router();
+const authCtrl = require('./auth.crtl');
 
-auth.get('/', (req, res) => {
-    res.send('here is auth');
-});
+auth.get('/test', authCtrl.test);
+auth.post('/register', authCtrl.register);
 
 module.exports = auth;
