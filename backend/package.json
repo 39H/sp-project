@@ -14,7 +14,6 @@
     "nodemon": "^1.12.1"
   },
   "scripts": {
-    "start:dev": "NODE_PATH=src nodemon --watch src/ src/index.js",
-    "dbsetup:dev": "NODE_PATH=src node src/model/setup.js"
+    "start:dev": "NODE_PATH=src nodemon --watch src/ src/index.js"
   }
 }

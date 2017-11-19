@@ -21,10 +21,16 @@ const sequelize = new Sequelize(
 );
 
 db['User'] = require('./user')(sequelize, Sequelize);
+db['Work'] = require('./work')(sequelize, Sequelize);
+db['Thread'] = require('./thread')(sequelize, Sequelize);
+db['Comment'] = require('./comment')(sequelize, Sequelize);
+db['Attachment'] = require('./attachment')(sequelize, Sequelize);
 
 Object.keys(db).forEach(model => {
-    db[model].sync();
+    if(db[model].associate) db[model].associate(db);
 });
+
+sequelize.sync();
 
 db.sequelize = sequelize;
 db.Sequelize = Sequelize;

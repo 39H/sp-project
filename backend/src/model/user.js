@@ -36,18 +36,24 @@ module.exports = (sequelize, DataTypes) => {
         }
     });
 
-    User.associate = function (model) {
+    User.associate = function(model) {
+        User.belongsToMany(User, {as: 'Creator', through: 'Subscribe'});
+        User.belongsToMany(model.Work, {as: 'LikedWorks', through: 'Like'});
+        User.hasMany(model.Work, {as: 'Works'});
+        User.hasMany(model.Thread, {as: 'HostedThreads', foreignKey: 'HostId'});
+        User.hasMany(model.Thread, {as: 'Threads'});
+        User.hasMany(model.Comment, {as: 'Comments'});
     };
 
-    User.findByEmail = function (email) {
+    User.findByEmail = function(email) {
         return User.findOne({where: {email}});
     };
 
-    User.findByUserName = function (userName) {
+    User.findByUserName = function(userName) {
         return User.findOne({where: {userName}});
     };
 
-    User.findExistancy = function ({email, userName}) {
+    User.findExistancy = function({email, userName}) {
         return User.findOne({
             where: {
                 [Op.or]: [
@@ -58,7 +64,7 @@ module.exports = (sequelize, DataTypes) => {
         });
     };
 
-    User.register = function ({email, password, displayName, userName}) {
+    User.register = function({email, password, displayName, userName}) {
         return User.create({
             email, password: hash(password), displayName, userName
         });

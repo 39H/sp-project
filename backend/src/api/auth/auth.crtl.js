@@ -4,6 +4,8 @@ exports.test = (req, res) => {
     res.send('Hello Test!');
 };
 
+
+
 exports.register = (req, res) => {
     let body = req.body;
     const {email, password, displayName, userName} = body;
@@ -25,10 +27,10 @@ exports.login = (req, res) => {
     let body = req.body;
 
     const {email, password} = body;
-    // todo: email, password 유효성 검사, 로그인 토큰 발급
+    // todo: email, password 유효성 검사
     User.findByEmail(email).then(user => {
         if(!user) return res.status(403).json();
-        const validatePassword = user.validatePassword;
+        const validatePassword = user.validatePassword(password);
 
         if(!validatePassword) {
             // 비밀번호 불일치
