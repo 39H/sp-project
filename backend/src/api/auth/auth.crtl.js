@@ -1,4 +1,4 @@
-const user = require('model/user.js');
+const User = (require('model')).User;
 
 exports.test = (req, res) => {
     res.send('Hello Test!');
@@ -6,38 +6,35 @@ exports.test = (req, res) => {
 
 exports.register = (req, res) => {
     let body = req.body;
-    const { email, password, displayName, userName } = body;
-
-    //email 검사
-    //password 검사
-    //displayName 검사
-    //userName 검사
-
-    user.findExistancy({email, userName}).then(
-        (results) => {
-            if(results.length > 0) {
-                const key = results[0].email === email ? 'email' : 'userName';
-                throw {status:409, body:{key}};
-            }
-            return user.register({email, password, displayName, userName});
+    const {email, password, displayName, userName} = body;
+    
+    // todo: email, password, displayName, userName 유효성 검사
+    User.findExistancy({email, userName}).then(exists => {
+        if(exists) {
+            const key = exists.email === email ? 'email' : 'userName';
+            return res.status(409).json({key});
         }
-    ).catch((error) => {
-        console.log('Failed to register');
-        let status = 400;
-        if(error.status) {
-            console.log(error);
-            let body = Object.assign({}, error.body);
-            status = error.status;
-            error = body;
-        };
-        res.status(status).json(error);
-    }).then((result) => {
-        console.log('OK');
-        res.json({
-            _id: result.insertId,
-            email,
-            displayName,
-            userName
+
+        User.register({email, password, displayName, userName}).then(user => {
+            res.json({id: user.id, email, displayName, userName});
         });
+    });
+};
+
+exports.login = (req, res) => {
+    let body = req.body;
+
+    const {email, password} = body;
+    // todo: email, password 유효성 검사, 로그인 토큰 발급
+    User.findByEmail(email).then(user => {
+        if(!user) return res.status(403).json();
+        const validatePassword = user.validatePassword;
+
+        if(!validatePassword) {
+            // 비밀번호 불일치
+            return res.status(403).json();
+        }
+
+        // todo: 로그인 토큰 발급
     });
 };

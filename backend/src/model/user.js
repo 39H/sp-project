@@ -1,52 +1,74 @@
-const con = require('./db.js');
+const crypto = require('crypto');
 
-exports.createTable = () => {
-    let q1 = new Promise((resolve, reject) => {
-        con.query('DROP TABLE IF EXISTS user', (err, results) => {
-            if(err) reject(err);
-            else resolve(results);
+const { PASSWORD_HASH_KEY: secret } = process.env;
+
+function hash(password) {
+    return crypto.createHmac('sha256', secret).update(password).digest('hex');
+}
+
+module.exports = (sequelize, DataTypes) => {
+    const Op = DataTypes.Op;
+
+    const User = sequelize.define('User', {
+        email: DataTypes.STRING,
+        password: DataTypes.STRING,
+        displayName: DataTypes.STRING,
+        userName: DataTypes.STRING,
+        photo: {
+            type: DataTypes.TEXT,
+            defaultValue: ''
+        },
+        profile: {
+            type: DataTypes.TEXT,
+            defaultValue: ''
+        },
+        isAdmin: {
+            type: DataTypes.BOOLEAN,
+            defaultValue: false
+        },
+        isBanned: {
+            type: DataTypes.BOOLEAN,
+            defaultValue: false
+        },
+        banDate: {
+            type: DataTypes.DATEONLY,
+            allowNull: true
+        }
+    });
+
+    User.associate = function (model) {
+    };
+
+    User.findByEmail = function (email) {
+        return User.findOne({where: {email}});
+    };
+
+    User.findByUserName = function (userName) {
+        return User.findOne({where: {userName}});
+    };
+
+    User.findExistancy = function ({email, userName}) {
+        return User.findOne({
+            where: {
+                [Op.or]: [
+                    {email},
+                    {userName}
+                ]
+            }
         });
-    });
+    };
 
-    let q2 = new Promise((resolve, reject) => {
-        con.query('CREATE TABLE user (\
-            `userno` int(11) NOT NULL AUTO_INCREMENT,\
-            `email` varchar(255) NOT NULL,\
-            `password` varchar(255) NOT NULL,\
-            `displayName` varchar(255) NOT NULL,\
-            `userName` varchar(255) NOT NULL,\
-            `photo` text NOT NULL DEFAULT "",\
-            `profile` text NOT NULL DEFAULT "",\
-            `isAdmin` tinyint(1) NOT NULL DEFAULT 0,\
-            `isBanned` tinyint(1) NOT NULL DEFAULT 0,\
-            `banDate` date default "0000-00-00",\
-            `createdAt` datetime NOT NULL,\
-            PRIMARY KEY (`userno`),\
-            UNIQUE KEY `email` (`email`),\
-            UNIQUE KEY `userName` (`userName`))', (err, results) => {
-                if(err) reject(err);
-                else resolve(results);
-            });
-    });
+    User.register = function ({email, password, displayName, userName}) {
+        return User.create({
+            email, password: hash(password), displayName, userName
+        });
+    };
 
-    return Promise.all([q1, q2]);
+    User.prototype.validatePassword = function(password) {
+        const hashed = hash(password);
+        return this.password === hashed;
+    };
+
+    return User;
 };
 
-exports.findExistancy = ({email, userName}) => {
-    return new Promise((resolve, reject) => {
-        con.query('SELECT * FROM user WHERE email = ? OR userName = ?', [email, userName], (err, results) => {
-            if(err) reject(err);
-            else resolve(results);
-        });
-    });
-};
-
-exports.register = ({email, password, displayName, userName}) => {
-    return new Promise((resolve, reject) => {
-        con.query('INSERT INTO user(email, password, displayName, userName, createdAt) VALUES (?, ?, ?, ?, ?)',
-        [email, password, displayName, userName, new Date()], (err, results) => {
-            if(err) reject(err);
-            else resolve(results);
-        });
-    });
-};
