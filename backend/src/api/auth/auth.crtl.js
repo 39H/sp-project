@@ -9,7 +9,7 @@ exports.register = (req, res) => {
     let body = req.body;
 
     // todo: displayName, userName 검사 조건 손보기
-    // todo: 로그인 토큰 발급
+    // todo: 로그인 토큰 발급 ?
 
     const schema = Joi.object({
         email: Joi.string().email().required(),
@@ -25,6 +25,7 @@ exports.register = (req, res) => {
     }
 
     const {email, password, displayName, userName} = body;
+
 
     User.findExistancy({email, userName}).then(exists => {
         if(exists) {
@@ -65,10 +66,39 @@ exports.login = (req, res) => {
             return res.status(403).json();
         }
 
-        // todo: 로그인 토큰 발급
+        user.generateToken().then(
+            accessToken => {
+                console.log('success');
+                res.cookie('access_token', accessToken, {
+                    httpOnly: true,
+                    maxAge: 1000 * 60 * 60 * 24 * 7
+                });
+
+                const { id, displayName, userName } = user;
+
+                res.json({id, displayName, userName});
+            }
+        );
     }).catch(error => {
         res.status(500).json(error);
     });
 };
 
-// todo: 로그아웃, 비밀번호 찾기?
+exports.check = (req, res) => {
+    const { user } = req;
+
+    if(!user) {
+        return res.status(403).json();
+    }
+    res.json({user});
+};
+
+exports.logout = (req, res) => {
+    res.cookie('access_token', null, {
+        httpOnly: true,
+        maxAge: 0
+    });
+    res.status(204).json();
+};
+
+// todo: 비밀번호 찾기?

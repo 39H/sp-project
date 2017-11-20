@@ -1,4 +1,5 @@
 const crypto = require('crypto');
+const token = require('lib/token');
 
 const { PASSWORD_HASH_KEY: secret } = process.env;
 
@@ -78,6 +79,17 @@ module.exports = (sequelize, DataTypes) => {
     User.prototype.validatePassword = function(password) {
         const hashed = hash(password);
         return this.password === hashed;
+    };
+
+    User.prototype.generateToken = function() {
+        const { id, userName, displayName } = this;
+        return token.generateToken({
+            user: {
+                id,
+                displayName,
+                userName
+            }
+        }, 'user');
     };
 
     return User;

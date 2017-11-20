@@ -3,10 +3,12 @@ require('dotenv').config();
 
 const express = require('express');
 const bodyParser = require('body-parser');
+const cookieParser = require('cookie-parser');
 
 const app = express();
 
 const api = require('./api');
+const jwtMiddleware = require('lib/middlewares/jwt');
 
 // 환경 변수 설정
 const {
@@ -14,6 +16,9 @@ const {
 } = process.env;
 
 app.use(bodyParser.json());
+app.use(cookieParser());
+
+app.use(jwtMiddleware);
 
 app.use('/api', api);
 
