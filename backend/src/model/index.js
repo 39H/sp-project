@@ -30,6 +30,7 @@ Object.keys(db).forEach(model => {
     if(db[model].associate) db[model].associate(db);
 });
 
+// todo: sync를 dev 명령어 등으로 따로 뺄까?
 sequelize.sync();
 
 db.sequelize = sequelize;
