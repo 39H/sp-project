@@ -13,5 +13,14 @@ module.exports = (sequelize, DataTypes) => {
         Thread.belongsTo(model.User);
     };
 
+    Thread.write = function({host, writer, subject, content}) {
+        return Thread.create({
+            subject,
+            content,
+            HostId: host.id,
+            UserId: writer.id
+        });
+    };
+
     return Thread;
 };
