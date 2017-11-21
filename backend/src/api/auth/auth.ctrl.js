@@ -1,10 +1,6 @@
 const Joi = require('joi');
 const User = (require('model')).User;
 
-exports.test = (req, res) => {
-    res.send('Hello Test!');
-};
-
 exports.register = (req, res) => {
     let body = req.body;
 
@@ -73,6 +69,7 @@ exports.login = (req, res) => {
                     httpOnly: true,
                     maxAge: 1000 * 60 * 60 * 24 * 7
                 });
+                
 
                 const { id, displayName, userName } = user;
 

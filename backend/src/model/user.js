@@ -43,7 +43,8 @@ module.exports = (sequelize, DataTypes) => {
     });
 
     User.associate = function(model) {
-        User.belongsToMany(User, {as: 'Creator', through: 'Subscribe'});
+        User.belongsToMany(User, {as: 'Creator', through: 'Subscribe', foreignKey: 'CreatorId', otherKey: 'UserId'});
+        User.belongsToMany(User, {as: 'Subscriber', through: 'Subscribe', foreignKey: 'UserId', otherKey: 'CreatorId'});
         User.belongsToMany(model.Work, {as: 'LikedWorks', through: 'Like'});
         User.hasMany(model.Work, {as: 'Works'});
         User.hasMany(model.Thread, {as: 'HostedThreads', foreignKey: 'HostId'});
