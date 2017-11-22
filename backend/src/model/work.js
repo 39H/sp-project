@@ -54,5 +54,11 @@ module.exports = (sequelize, DataTypes) => {
         })
     }
 
+    Work.uploadWork = function({subject, workType, workURL, thumbnail, content, UserId}) {
+        return Work.create({
+            subject, workType, workURL, thumbnail, content, UserId
+        });
+    };
+
     return Work;
 };

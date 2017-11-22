@@ -15,7 +15,6 @@ exports.getCreator = (req, res) => {
         });
 };
 
-
 // 나를 구독한 사람
 exports.getSubscriber = (req, res) => {
     if(!req.user) return res.status(403).json();
