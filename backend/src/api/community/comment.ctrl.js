@@ -2,8 +2,29 @@ const Joi = require('joi');
 const Model = require('model');
 const { User, Thread, Comment } = Model;
 
+// 게시글 전체 목록
+// todo: 사용자가 관리자인지 체크? 굳이?, pagenate?
+exports.getAllComments = async (req, res) => {
+    try {
+        const comments = await Comment.findAll({order: [['createdAt','DESC']]});
+
+        const results = [];
+        await Promise.all(comments.map(async comment => {
+            const { id, content, createdAt, updatedAt, ThreadId } = comment;
+            const user = await comment.getUser();
+            const { displayName, userName } = user;
+
+            results.push({ id, content, createdAt, updatedAt, ThreadId, displayName, userName });
+        }));
+
+        res.json(results);
+    } catch(error) {
+        res.status(500).json(error);
+    }
+};
 
 // 댓글 목록 가져오기
+// todo: pagenate?
 exports.getComments = async (req, res) => {
     const hostUserName = req.params.user_name;
     const threadId = req.params.thread_id;
@@ -17,13 +38,18 @@ exports.getComments = async (req, res) => {
             return res.status(404).json({msg: '게시글을 찾지 못했습니다.'});
         }
 
-        const comments = await thread.getComments();
-        res.json(
-            comments.map(comment => {
-                const { id, content, createdAt, updatedAt, ThreadId } = comment;
-                return { id, content, createdAt, updatedAt, ThreadId };
-            })
-        );
+        const comments = await thread.getComments({order: [['createdAt','DESC']]});
+
+        const results = [];
+        await Promise.all(comments.map(async comment => {
+            const { id, content, createdAt, updatedAt, ThreadId } = comment;
+            const user = await comment.getUser();
+            const { displayName, userName } = user;
+
+            results.push({ id, content, createdAt, updatedAt, ThreadId, displayName, userName });
+        }));
+
+        res.json(results);
     } catch(error) {
         res.status(500).json();
     }
@@ -54,7 +80,7 @@ exports.writeComment = async (req, res) => {
 
 };
 
-// 댓글 가져오기
+// 댓글 조회
 exports.getComment = async (req, res) => {
     const hostUserName = req.params.user_name;
     const threadId = req.params.thread_id;
@@ -63,7 +89,7 @@ exports.getComment = async (req, res) => {
     try {
         const comment = await Comment.findById(commentId);
         if(!comment) {
-            return res.status(404).json({msg: '존재하지 않는 덧글입니다.'});
+            return res.status(404).json({msg: '존재하지 않는 댓글입니다.'});
         }
 
         const { id, content, createdAt, updatedAt, ThreadId } = comment;
@@ -89,15 +115,15 @@ exports.patchComment = async (req, res) => {
     try {
         const comment = await Comment.findById(commentId);
         if(!comment) {
-            return res.status(404).json({msg: '존재하지 않는 덧글입니다.'});
+            return res.status(404).json({msg: '존재하지 않는 댓글입니다.'});
         }
 
         if(comment.UserId !== req.user.id) {
-            return res.status(403).json({msg: '덧글 작성자가 아닙니다.'});
+            return res.status(403).json({msg: '댓글 작성자가 아닙니다.'});
         }
 
-        const edited = await comment.update({content});
-        res.json(edited);
+        const patched = await comment.update({content});
+        res.json(patched);
 
     } catch(error) {
         res.status(500).json(error);
@@ -118,11 +144,11 @@ exports.deleteComment = async (req, res) => {
     try {
         const comment = await Comment.findById(commentId);
         if(!comment) {
-            return res.status(404).json({msg: '존재하지 않는 덧글입니다.'});
+            return res.status(404).json({msg: '존재하지 않는 댓글입니다.'});
         }
 
         if(comment.UserId !== req.user.id) {
-            return res.status(403).json({msg: '덧글 작성자가 아닙니다.'});
+            return res.status(403).json({msg: '댓글 작성자가 아닙니다.'});
         }
 
         const deleted = await comment.destroy();
