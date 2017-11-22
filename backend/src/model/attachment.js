@@ -11,5 +11,19 @@ module.exports = (sequelize, DataTypes) => {
         Attachment.belongsTo(model.Work);
     };
 
+    
+    Attachment.upload = function(fileName, filePath, work){
+        return Attachment.create({
+            fileName: fileName,
+            filePath: filePath,
+            WorkId: work.id
+        })
+    }
+
+    Attachment.findall = function(workId){
+        return Attachment.findAll({where : {workId : workId}});
+    }
+    
     return Attachment;
+   
 };
