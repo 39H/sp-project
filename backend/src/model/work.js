@@ -48,6 +48,11 @@ module.exports = (sequelize, DataTypes) => {
     };
 
     // todo: 메인화면에서 구독한 사람들 작품 목록 가지고 오는 함수... (어케 가져올지..)
-    
+       Work.upload = function({subject,  workType, workURL, thumbnail, content, User}) {
+        return Work.create({
+            subject, workType, workURL, thumbnail, content, UserId : User.id
+        })
+    }
+
     return Work;
 };
