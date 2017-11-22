@@ -12,13 +12,17 @@ const Work = Model.Work;
 // 작품 아이디, 제목, 썸네일, (작품 내용), 작품 업로드한 유저의 displayName, userName
 
 exports.listByRecent = (req, res) => {
-    
+    Work.listbyRecent().then(list => {
+        res.status(400).json(list);
+    }).catch(err => { res.status(403).json(err)});
 };
 
 exports.listByLikes = (req, res) => {
+    Work.listbyLikes().then(list => {
+        res.status(400).json(list);
+    }).catch(err => { res.status(403).json(err)});
 
 };
-
 exports.listByUser = (req, res) => {
 
 };
