@@ -11,5 +11,13 @@ module.exports = (sequelize, DataTypes) => {
         Comment.belongsTo(model.User);
     };
 
+    Comment.write = function({user, thread, content}) {
+        return Comment.create({
+            content,
+            UserId: user.id,
+            ThreadId: thread.id
+        });
+    };
+
     return Comment;
 };
