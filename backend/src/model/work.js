@@ -60,5 +60,14 @@ module.exports = (sequelize, DataTypes) => {
         });
     };
 
+    //limit는 추후에 pagenate와 함께 
+    Work.listbyRecent = function() {
+        return Work.findAll({limit : 20 , order : sequelize.literal('createdAt DESC')});
+    }
+
+    Work.listbyLikes = function() {
+        return Work.findAll({limit : 20 , order : sequelize.literal(' DESC')});
+    }
+    
     return Work;
 };
