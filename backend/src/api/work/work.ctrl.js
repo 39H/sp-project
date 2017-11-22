@@ -17,6 +17,8 @@ exports.getWork = (req, res) => {
     });
 };
 
+
+
 exports.uploadWork = (req, res) => {
     const { user } = req;
 
@@ -32,6 +34,29 @@ exports.uploadWork = (req, res) => {
         workURL: Joi.string().uri(),
         content: Joi.string()
     });
+
+    User.findById(user.id).then(User => {
+    if(user.id != User.id) return res.status(403).json();
+    const {subject,  workType, workURL, thumbnail, content } = body;
+    Work.upload({subject,  workType, workURL, thumbnail, content, User});
+    }
+    )
+};
+
+
+exports.getWork = (req, res) => {
+    const workid = req.params.work_id;
+
+    Work.findById(workid).then(work => {
+        
+    // 해당 work 없음
+    if(!work) return res.status(404).json();
+                
+     const {subject,  workType, workURL, thumbnail, content, Liker, Attachments, User} = work;
+     const result = {subject,  workType, workURL, thumbnail, content, Liker, Attachments, User};
+      res.json(result);
+    }
+    )
 };
 
 exports.deleteWork = (req, res) => {
