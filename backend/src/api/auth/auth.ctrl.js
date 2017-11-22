@@ -98,4 +98,44 @@ exports.logout = (req, res) => {
     res.status(204).json();
 };
 
-// todo: 비밀번호 찾기?
+/*exports.forgetpass = (req, res) => {
+    todo : 새로 비밀번호를 생성해서, 유저 테이블을 바꾸고 이메일로 전달
+
+    })
+}*/
+
+exports.edit = (req, res) => {
+    if(!req.user) return res.status(403).json({msg: "로그인 중이 아닙니다."}); 
+
+    const { userName, new_password } = req.body; // 변경 정보
+    User.findByUserName(userName).then(user => {
+            if (req.user.id != user.id) return res.status(403).json({msg : "토큰 발행 당시 id와 현재 요청 id 일치 하지 않음"}); 
+            if (!user) return res.status(403).json({msg: "해당 userName의 유저가 존재하지 않습니다."});
+
+            user.password_edit(new_password).then(updated => {
+                console.log("edit username");
+                const { id, password, userName } = updated;
+                const result = { id, password, userName };
+                res.json({msg: "PUT OK", result});
+            });
+        }).catch(error => {
+            return res.status(403).json({msg: "Promise 오류"});
+        });
+};
+
+exports.delete = (req, res) => {
+    if(!req.user) return res.status(403).json({msg: "로그인 중이 아닙니다."});
+
+    const {userName} = req.body;
+
+    User.findByUserName(userName).then(user => {
+            if (req.user.id != user.id) return res.status(403).json({msg : "토큰 발행 당시 id와 현재 요청 id 일치 하지 않음"}); 
+            if (!user) return res.status(403).json({msg: "해당 userName의 유저가 존재하지 않습니다."});
+
+            user.delete().then(user => {
+                res.json({msg: "delete OK" });
+            });
+        }).catch(error => {
+            return res.status(403).json({msg: "Promise 오류"});
+        });
+};
