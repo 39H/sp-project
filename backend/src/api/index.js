@@ -9,6 +9,7 @@ const subscribe = require('./subscribe');
 const like = require('./like');
 const community = require('./community');
 const attachment = require('./attachment');
+const manage = require('./manage');
 
 api.use('/auth', auth);
 api.use('/user', user);
@@ -18,5 +19,6 @@ api.use('/subscribe', subscribe);
 api.use('/like', like);
 api.use('/community', community);
 api.use('/attachment', attachment);
+api.use('/manage', manage);
 
 module.exports = api;

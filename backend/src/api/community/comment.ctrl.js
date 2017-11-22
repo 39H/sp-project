@@ -2,27 +2,6 @@ const Joi = require('joi');
 const Model = require('model');
 const { User, Thread, Comment } = Model;
 
-// 게시글 전체 목록
-// todo: 사용자가 관리자인지 체크? 굳이?, pagenate?
-exports.getAllComments = async (req, res) => {
-    try {
-        const comments = await Comment.findAll({order: [['createdAt','DESC']]});
-
-        const results = [];
-        await Promise.all(comments.map(async comment => {
-            const { id, content, createdAt, updatedAt, ThreadId } = comment;
-            const user = await comment.getUser();
-            const { displayName, userName } = user;
-
-            results.push({ id, content, createdAt, updatedAt, ThreadId, displayName, userName });
-        }));
-
-        res.json(results);
-    } catch(error) {
-        res.status(500).json(error);
-    }
-};
-
 // 댓글 목록 가져오기
 // todo: pagenate?
 exports.getComments = async (req, res) => {

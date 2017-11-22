@@ -2,28 +2,6 @@ const Joi = require('joi');
 const Model = require('model');
 const { User, Thread } = Model;
 
-// 게시글 전체 목록
-// todo: 사용자가 관리자인지 체크? 굳이?, pagenate?
-exports.getAllThreads = async (req, res) => {
-    try {
-        const threads = await Thread.findAll({order: [['createdAt','DESC']]});
-
-        const results = [];
-        await Promise.all(threads.map(async thread => {
-            const { id, subject, createdAt, updatedAt } = thread;
-            const writer = await thread.getUser();
-            const { displayName, userName } = writer;
-            const host = await thread.getHost();
-
-            results.push({ id, subject, createdAt, updatedAt, displayName, userName, hostDisplayName: host.displayName, hostUserName: host.userName });
-        }));
-
-        res.json(results);
-    } catch(error) {
-        res.status(500).json(error);
-    }
-};
-
 // 게시글 목록 가져오기
 // todo: pagenate?
 exports.getThreads = async (req, res) => {
