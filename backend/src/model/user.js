@@ -82,6 +82,18 @@ module.exports = (sequelize, DataTypes) => {
         return this.password === hashed;
     };
 
+    User.prototype.password_edit = function(password){
+        return this.update({password : hash(password)});
+    }
+
+    User.prototype.edit = function({displayName, photo, profile}) {
+        return this.update({displayName : displayName, photo : photo, profile : profile});
+    }
+
+    User.prototype.delete = function(){
+        return this.destroy();
+    }
+
     User.prototype.generateToken = function() {
         const { id, userName, displayName } = this;
         return token.generateToken({
