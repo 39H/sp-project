@@ -1,4 +1,5 @@
 const Joi = require('joi');
+const rp = require('request-promise');
 const Model = require('model');
 const { User, Work } = Model;
 
@@ -17,10 +18,26 @@ exports.uploadWork = async (req, res) => {
 
     const {subject, workType, workURL, content } = body;
 
-    switch(workType) {
-        case 'image':
-        break;
-        case 'video':
+    if(workType === 'image') {
+        const schema = Joi.object({
+            subject: Joi.string().required(),
+            workType: Joi.string().required(),
+            workURL: Joi.string().uri(),
+            content: Joi.string()
+        });
+
+        const result = Joi.validate(body, schema);
+
+        if(result.error) {
+            return res.status(400).json(result.error);
+        }
+
+        try {
+
+        } catch(error) {
+            res.status(500).json(error);
+        }
+    } else if (workType === 'video') {
         const schema = Joi.object({
             subject: Joi.string().required(),
             workType: Joi.string().required(),
@@ -47,12 +64,28 @@ exports.uploadWork = async (req, res) => {
         } catch(error) {
             res.status(500).json(error);
         }
-        break;
-        case ' text':
-        break;
-        default:
-        return res.status(403).json("유효하지 않은 작품 타입입니다.");
-    };
+    } else if (workType === 'text') {
+        const schema = Joi.object({
+            subject: Joi.string().required(),
+            workType: Joi.string().required(),
+            workURL: Joi.string().uri(),
+            content: Joi.string().required()
+        });
+
+        const result = Joi.validate(body, schema);
+
+        if(result.error) {
+            return res.status(400).json(result.error);
+        }
+
+        try {
+            
+        } catch(error) {
+            res.status(500).json(error);
+        }
+    } else {
+        return res.status(403).json('유효하지 않은 작품 타입입니다.');
+    }
 };
 
 
