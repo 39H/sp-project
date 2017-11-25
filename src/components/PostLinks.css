@@ -1,0 +1,17 @@
+.post-links a {
+    display: block;
+    text-align: center;
+    text-decoration: none;
+    background-color: #495057;
+    color: white;
+    padding: 0.5rem;
+    transition: background .3s;
+}
+
+.post-links a:hover {
+    background-color: #868e96;
+}
+
+.post-links a:active {
+    background-color: #343a40;
+}
