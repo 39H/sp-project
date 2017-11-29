@@ -136,7 +136,6 @@ exports.profileupload = multer({
     .catch(error => {
         return res.status(403).json();
     });
-    return res.status(400).json();
 }
 
 exports.thumbnail = (req, res) => {
@@ -155,5 +154,4 @@ exports.thumbnail = (req, res) => {
     .catch(error => {
         return res.status(403).json();
     });
-    return res.status(400).json();
 }
