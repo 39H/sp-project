@@ -53,7 +53,11 @@ module.exports = (sequelize, DataTypes) => {
             subject, workType, workURL, thumbnail, content, UserId : User.id
         })
     }
-
+       
+    Work.prototype.edit = function({subject, workURL, thumbnail, content }) {
+        return this.update({subject : subject, workURL : workURL, thumbnail : thumbnail, content : content});
+    }
+    
     Work.uploadWork = function({subject, workType, workURL, thumbnail, content, UserId}) {
         return Work.create({
             subject, workType, workURL, thumbnail, content, UserId
