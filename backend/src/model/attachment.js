@@ -24,6 +24,9 @@ module.exports = (sequelize, DataTypes) => {
         return Attachment.findAll({where : {workId : workId}});
     }
     
+    Attachment.prototype.delete = function(attachId){
+        return Attachment.findById(attachId).destory();
+    }
     return Attachment;
    
 };
