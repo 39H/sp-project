@@ -1,14 +1,12 @@
 import React, { Component } from 'react';
-import { HeaderContainer, WorkList } from 'containers';
+import { HeaderContainer, WorksContainer } from 'containers';
 
 class Trending extends Component {
   render() {
     return (
       <div>
         <HeaderContainer />
-        <div>
-          <WorkList type="likes" />
-        </div>
+        <WorksContainer type="likes" />
       </div>
     );
   }

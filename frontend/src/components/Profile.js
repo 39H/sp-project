@@ -41,7 +41,7 @@ function Profile(props) {
                     size={80}
                 />
                 <Typography className={classes.displayName} type="title" component="h2">{displayName}</Typography>
-                <Typography className={classes.description} type="body1" component="div">{profile}</Typography>
+                <Typography className={classes.description} type="body1" component="div">{!profile || profile === '' ? 'No description.' : profile}</Typography>
                 <Button onClick={toggleSubscribe} className={classes.subscribe} raised color={subscribed ? 'accent' : 'default'}>{subscribed ? 'Subscribed' : 'Subscribe'}</Button>
             </Paper>
         </div>

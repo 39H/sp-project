@@ -5,7 +5,7 @@ import { withStyles } from 'material-ui/styles';
 import Button from 'material-ui/Button';
 
 import Profile from 'components/Profile';
-import PortfolioTab from 'components/PortfolioTab';
+import PortfolioMenu from 'components/PortfolioMenu';
 import ThreadTable from 'components/ThreadTable';
 
 const styles = theme => ({
@@ -24,16 +24,16 @@ const styles = theme => ({
 class Portfolio extends Component {
 
     render() {
-        const { classes, children } = this.props;
-        const { userInfo, subscribed, toggleSubscribe, mode, onChange } = this.props;
+        const { classes, children, select } = this.props;
+        const { userName, userInfo, subscribed, toggleSubscribe } = this.props;
 
         return (
             <div className={classes.root}>
                 <div className={classes.leftSide}>
                     <Profile userInfo={userInfo} subscribed={subscribed} toggleSubscribe={toggleSubscribe}/>
+                    <PortfolioMenu select={select} userName={userName}/>
                 </div>
                 <div className={classes.flexGrow}>
-                    <PortfolioTab mode={mode} onChange={onChange}/>
                     {children}
                 </div>
             </div>

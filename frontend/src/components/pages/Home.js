@@ -1,14 +1,12 @@
 import React, { Component } from 'react';
-import { HeaderContainer, WorkList } from 'containers';
+import { HeaderContainer, WorksContainer } from 'containers';
 
 class Home extends Component {
   render() {
     return (
       <div className="Home">
         <HeaderContainer />
-        <div>
-          <WorkList type="recent" />
-        </div>
+        <WorksContainer type="recent" />
       </div>
     );
   }

@@ -5,11 +5,9 @@ class Portfolio extends Component {
   render() {
     const { match } = this.props;
     return (
-      <div className="Home">
+      <div>
         <HeaderContainer />
-        <div>
-            <PortfolioContainer userName={match.params.username}/>
-        </div>
+        <PortfolioContainer select={0} userName={match.params.username}/>
       </div>
     );
   }

@@ -1,10 +1,7 @@
 import React, { Component } from 'react';
-import { Route } from 'react-router-dom';
-import Home from 'containers/Home';
-import Trending from 'containers/Trending';
-import Work from 'containers/Work';
-import Portfolio from 'containers/Portfolio';
-import Test from 'containers/Test';
+import { Route, Switch } from 'react-router-dom';
+
+import { Home, Trending, Work, Portfolio, Community, Thread } from './pages';
 
 import { UserLoader } from 'containers';
 
@@ -15,8 +12,11 @@ class App extends Component {
                 <Route exact path="/" component={Home}/>
                 <Route path="/trending" component={Trending}/>
                 <Route path="/work/:workid" component={Work}/>
-                <Route path="/portfolio/:username" component={Portfolio}/>
-                <Route path="/test" component={Test}/>
+                <Switch>
+                    <Route path="/portfolio/:username/community/:threadid" component={Thread}/>
+                    <Route path="/portfolio/:username/community" component={Community}/>
+                    <Route path="/portfolio/:username" component={Portfolio}/>
+                </Switch>
                 <UserLoader/>
             </div>
         );

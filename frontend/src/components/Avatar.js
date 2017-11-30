@@ -12,6 +12,7 @@ const TextAvatar = ({displayName, size}) => {
             height: size,
             color: color.fg,
             backgroundColor:  color.bg,
+            fontSize: (size / 40 * 1.25) + 'rem',
         }
     };
 

@@ -8,6 +8,9 @@ import ModeEditIcon from 'material-ui-icons/ModeEdit';
 import ThreadTable from 'components/ThreadTable';
 
 const styles = theme => ({
+    root: {
+        padding: [theme.spacing.unit * 2, theme.spacing.unit],
+    },
     flexGrow: {
         flex: '1 1 auto',
     },
@@ -22,7 +25,7 @@ const styles = theme => ({
 
 const ThreadList = ({classes, ...rest}) => {
     return(
-        <div>
+        <div className={classes.root}>
             <ThreadTable {...rest}/>
             <div className={classes.footer}>
                 <div className={classes.flexGrow} />
