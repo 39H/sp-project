@@ -100,7 +100,7 @@ class RegisterDialog extends Component {
                             }
                         />
                     </FormControl>
-                    <Button raised color="primary" className={classes.button}>Register</Button>
+                    <Button onClick={onRegister} raised color="primary" className={classes.button}>Register</Button>
                 </DialogContent>
                 }
             </Dialog>
