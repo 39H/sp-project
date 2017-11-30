@@ -65,6 +65,7 @@ export default connect(
         open: state.auth.getIn(['loginModal', 'open']),
         form: state.auth.get('loginForm'),
         error: state.auth.get('error'),
+        loginResult: state.auth.get('loginResult'),
         pending: state.pender.pending['auth/LOGIN'],
     }),
     (dispatch) => ({
