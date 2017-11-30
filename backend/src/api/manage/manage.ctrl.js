@@ -1,5 +1,9 @@
 const Model = require('model');
-const { User, Thread, Comment } = Model;
+const { User, Thread, Comment, Work } = Model;
+const multer = require('multer');
+const path = require('path');
+const fs = require('fs');
+
 
 exports.getAllThreads = async (req, res) => {
     try {
@@ -111,3 +115,60 @@ exports.getSubscribers = async (req, res) => {
     }
 
 };
+
+exports.profileupload = multer({
+    storage: multer.diskStorage({
+      destination: function (req, file, cb) {
+        cb(null, 'uploads/profiles/');
+      },
+      filename: function (req, file, cb) {
+        cb(null, new Date().valueOf()  + path.extname(file.originalname));
+      }
+    }),
+  });
+
+  exports.thumbnailupload = multer({
+    storage: multer.diskStorage({
+      destination: function (req, file, cb) {
+        cb(null, 'uploads/thumbnails/');
+      },
+      filename: function (req, file, cb) {
+        cb(null, new Date().valueOf()  + path.extname(file.originalname));
+      }
+    }),
+  });
+
+  exports.profile = (req, res) => {
+    const file = req.file;
+    const userid = req.params.user_id;
+    console.log(file);
+    //if(req.user.id != userid) return res.status(400).json({msg : "권한이 없습니다"});
+
+    User.findById(userid).then(user =>{
+        user.edit({photo : file.path}).then(photouser => {
+            return res.status(200).json({msg: "profile upload OK", user_email : photouser.email, photo : file.path})
+            .catch(error => {return res.status(403).json(); })
+        })
+    })
+    .catch(error => {
+        return res.status(403).json();
+    });
+}
+
+exports.thumbnail = (req, res) => {
+    const file = req.file;
+    const workid = req.params.work_id;
+
+    //if(req.user.id != userid) return res.status(400).json({msg : "권한이 없습니다"});
+
+    Work.findById(workid).then(work =>{
+        work.edit({thumbnail : file.path}).then(photowork => {
+            console.log(photowork.thumbnail);
+            return res.status(200).json({msg: "thumbnail upload OK", work_id : photowork.id, thumbnail : file.path})
+            .catch(error => {return res.status(403).json(); })
+        })
+    })
+    .catch(error => {
+        return res.status(403).json();
+    });
+}
