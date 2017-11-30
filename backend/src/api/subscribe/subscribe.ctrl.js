@@ -2,7 +2,7 @@ const Model = require('model');
 const User = Model.User;
 
 // 내가 구독한 사람
-exports.getCreator = (req, res) => {
+exports.getSubscriptions = (req, res) => {
     if(!req.user) return res.status(403).json();
     
         User.findById(req.user.id).then(user => {
@@ -15,19 +15,20 @@ exports.getCreator = (req, res) => {
         });
 };
 
-// 나를 구독한 사람
-exports.getSubscriber = (req, res) => {
-    if(!req.user) return res.status(403).json();
+// 구독 여부
+exports.getSubscribed = async (req, res) => {
+    if(!req.user) return res.status(403).json({msg: '먼저 로그인 하세요.'});
 
-    User.findById(req.user.id).then(user => {
-        user.getSubscriber().then(results => {
-            console.log(results.length); // 0이면 구독자 없음
-            const subscribers = results.map((subscriber) => { const {userName, displayName} = subscriber; return {userName, displayName}; });
-            res.json(subscribers);
-        });
-    }).catch(error => {
+    const userName = req.params.user_name;
+
+    try {
+        const user = await User.findById(req.user.id);
+        const creator = await User.findByUserName(userName);
+
+        res.json({subscribed: await creator.hasSubscriber(user)});
+    } catch(error) {
         res.status(500).json(error);
-    });
+    }
 };
 
 // todo: 이미 구독한 사용자인지 체크하고 구독or 오류메세지 날리게? 굳이??

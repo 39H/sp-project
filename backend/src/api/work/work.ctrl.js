@@ -57,9 +57,9 @@ exports.uploadWork = async (req, res) => {
 
         try {
             const repos = JSON.parse(await rp('https://www.googleapis.com/youtube/v3/videos?part=snippet&id='+videoId+'&key='+apiKey));
-            const thumbnail = repos.items[0].snippet.thumbnails.default.url;
+            const thumbnail = repos.items[0].snippet.thumbnails.medium.url;
 
-            const uploaded = await Work.uploadWork({subject, workType, workURL, thumbnail, content, UserId:user.id});
+            const uploaded = await Work.uploadWork({subject, workType, workURL: 'https://www.youtube.com/embed/'+videoId, thumbnail, content, UserId:user.id});
             res.json(uploaded);
         } catch(error) {
             res.status(500).json(error);
@@ -89,19 +89,21 @@ exports.uploadWork = async (req, res) => {
 };
 
 
-exports.getWork = (req, res) => {
+exports.getWork = async (req, res) => {
     const workid = req.params.work_id;
 
-    Work.findById(workid).then(work => {
-        
-    // 해당 work 없음
-    if(!work) return res.status(404).json();
-                
-     const {subject,  workType, workURL, thumbnail, content, Liker, Attachments, User} = work;
-     const result = {subject,  workType, workURL, thumbnail, content, Liker, Attachments, User};
-      res.json(result);
+    try {
+        const work = await Work.findById(workid);
+        if(!work) return res.status(404).json({msg: '해당 작품을 찾지 못했습니다.'});
+
+        const {id, subject, workType, workURL, thumbnail, content, likes, createdAt, updatedAt} = work;
+        const creator = await work.getUser();
+        const { userName, displayName, photo } = creator;
+
+        res.json({id, subject, workType, workURL, thumbnail, content, likes, createdAt, updatedAt, userName, displayName, photo});
+    } catch (error) {
+        res.status(500).json(error);
     }
-    )
 };
 
 exports.deleteWork = (req, res) => {
@@ -113,7 +115,7 @@ exports.deleteWork = (req, res) => {
     Work.findById(workId).then(work => {
         if(!work) return res.status(404).json();
         
-        if(user.id != work.UserId) return res.status(403).json();
+        if(user.id != work.UserId) return res.status(403).json({msg: '작품을 등록한 사용자가 아닙니다.'});
         work.delete().then(deleted => {
             res.json({workId});
         });

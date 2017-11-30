@@ -1,5 +1,17 @@
 const Joi = require('joi');
-const User = (require('model')).User;
+const Model = require('model');
+const { User } = Model;
+
+// 자신 정보 조회
+exports.getMyInfo = async (req, res) => {
+    if(!req.user) return res.status(403).json({msg: '먼저 로그인 하세요.'});
+
+    const user = await User.findById(req.user.id);
+    if(!user) return res.status(404).json({msg: '유효하지 않은 사용자입니다.'});
+
+    const { displayName, photo, profile } = user;
+    res.json({ displayName, photo, profile });
+};
 
 // 사용자 정보 조회 ((이메일?), 유저이름, 디스플레이이름, 프로필사진, 프로필내용))
 exports.view = (req, res) => {

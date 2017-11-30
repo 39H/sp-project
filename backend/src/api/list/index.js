@@ -4,5 +4,6 @@ const listCtrl = require('./list.ctrl');
 
 list.get('/recent', listCtrl.listByRecent);
 list.get('/likes', listCtrl.listByLikes);
+list.get('/user/:user_name', listCtrl.listByUser);
 
 module.exports = list;

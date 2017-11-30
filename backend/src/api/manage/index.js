@@ -13,4 +13,6 @@ manage.get('/thread/mine', manageCtrl.getMyThreads);
 // 내가 쓴 댓글 목록
 manage.get('/comment/mine', manageCtrl.getMyComments);
 
+manage.get('/subscriber', manageCtrl.getSubscribers);
+
 module.exports = manage;

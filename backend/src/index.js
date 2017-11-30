@@ -4,6 +4,8 @@ require('dotenv').config();
 const express = require('express');
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
+const path = require('path');
+const fs = require('fs');
 
 const app = express();
 
@@ -20,10 +22,13 @@ app.use(cookieParser());
 
 app.use(jwtMiddleware);
 
+app.use('/', express.static(path.join(__dirname, '../../frontend/build')));
+
 app.use('/api', api);
 
-app.get('/', (req, res) => {
-    res.send('Hello, world!');
+app.get('*', (req, res, next) => {
+    if(req.path.split('/')[1] === 'static') return next();
+    res.sendFile(path.join(__dirname, '../../frontend/build/index.html'));
 });
 
 app.listen(port, () => {

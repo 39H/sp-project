@@ -94,3 +94,20 @@ exports.getMyComments = async (req, res) => {
         res.status(500).json(error);
     }
 };
+
+exports.getSubscribers = async (req, res) => {
+    if(!req.user) return res.status(403).json();
+
+    try {
+        const user = await User.findById(req.user.id);
+        const subscribers = await user.getSubscriber();
+
+        res.json(subscribers.map((subscriber) => {
+            const {userName, displayName, photo} = subscriber;
+            return { userName, displayName, photo };
+        }));
+    } catch(error) {
+        res.status(500).json(error);
+    }
+
+};
