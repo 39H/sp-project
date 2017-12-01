@@ -79,8 +79,9 @@ class Comments extends Component {
 
     render() {
         const { classes } = this.props;
-        const { data } = this.props;
+        const { data, forms, onChangeInput, onWriteComment } = this.props;
 
+        const { content } = forms.toJS();
         const comments = data.toJS();
 
         return (
@@ -92,15 +93,18 @@ class Comments extends Component {
                             <InputLabel htmlFor="comment">Comment</InputLabel>
                             <Input
                                 id="comment"
+                                name="content"
                                 type="text"
+                                value={content}
+                                onChange={onChangeInput}
                             />
                         </FormControl>
-                        <Button className={classes.commentButton} raised color="primary">Send</Button>
+                        <Button onClick={onWriteComment} className={classes.commentButton} raised color="primary">Send</Button>
                     </div>
                 </div>
                 <ul className={classes.commentList}>
                     {comments.map(comment => {
-                        return <Comment data={comment}/>
+                        return <Comment key={comment.id} data={comment}/>
                     })}
                 </ul>
             </div>

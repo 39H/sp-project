@@ -21,30 +21,43 @@ class CommentsContainer extends Component {
         }
     }
 
+    handleChangeInput = (e) => {
+        const { CommentActions } = this.props;
+        const { name, value } = e.target;
+
+        CommentActions.changeInput({name, value});
+    };
+
+    handleWriteComment = async () => {
+        const { CommentActions, form, userName, threadId } = this.props;
+        const { content } = form.toJS();
+
+        // try로 감싸고 실패시 덧글 등록 실패 메세지 출력..
+        await CommentActions.writeComment({userName, threadId, content});
+        await CommentActions.getComments({userName, threadId});
+    };
+
     render() {
-        const { threadId, comments, loading } = this.props;
+        const { threadId, comments, form, loading } = this.props;
+        const { handleChangeInput, handleWriteComment } = this;
 
         if(!comments || loading) return <Spinner/>
 
         return (
-            <Comments data={comments}/>
+            <Comments
+                data={comments}
+                forms={form}
+                onChangeInput={handleChangeInput}
+                onWriteComment={handleWriteComment}
+            />
         );
     }
 }
 
-/*
-            <div>
-                {comments.map(comment => {
-                    const { id, content, createdAt, updatedAt, displayName, userName } = comment;
-
-                    return 
-                })}
-            </div>
-*/
-
 export default connect(
     (state) => ({
         comments: state.comment.get('comments'),
+        form: state.comment.get('form'),
         loading: state.pender.pending['comment/GET_COMMENTS'],
     }),
     (dispatch) => ({

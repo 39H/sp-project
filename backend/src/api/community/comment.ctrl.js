@@ -52,7 +52,7 @@ exports.writeComment = async (req, res) => {
         const thread = await Thread.findById(threadId);
         const writed = await Comment.write({user, thread, content});
 
-        const { id, Content, ThreadId, updatedAt, createdAt } = writed;
+        const { id, content:Content, ThreadId, updatedAt, createdAt } = writed;
         const { userName, displayName } = user;
 
         return res.json({ id, content:Content, ThreadId, updatedAt, createdAt, userName, displayName });
