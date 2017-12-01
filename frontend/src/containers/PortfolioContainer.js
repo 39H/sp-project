@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import * as portfolioActions from 'store/modules/portfolio';
-import * as listActions from 'store/modules/list';
 
 import Portfolio from 'components/Portfolio';
 import { WorksContainer } from 'containers';
@@ -10,9 +9,17 @@ import { WorksContainer } from 'containers';
 class PortfolioContainer extends Component {
 
     componentDidMount() {
-        const { PortfolioActions, ListActions, userName } = this.props;
+        const { PortfolioActions, userName } = this.props;
         PortfolioActions.getUserInfo({userName});
         PortfolioActions.getSubscribed({userName});
+    }
+
+    componentWillReceiveProps(nextProps) {
+        if(nextProps.userName !== this.props.userName) {
+            const { PortfolioActions, userName } = nextProps;
+            PortfolioActions.getUserInfo({userName});
+            PortfolioActions.getSubscribed({userName});
+        }
     }
 
     handleSubscribe = async () => {

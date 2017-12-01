@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { HeaderContainer, CommunityContainer, ThreadListContainer, PortfolioContainer } from 'containers';
+import { HeaderContainer, ThreadListContainer, PortfolioContainer } from 'containers';
 
 class Community extends Component {
     render() {

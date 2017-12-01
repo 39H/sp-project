@@ -1,6 +1,6 @@
-import { createAction, handleActions, handleAction } from 'redux-actions';
+import { createAction, handleActions } from 'redux-actions';
 
-import { Map, List, fromJS } from 'immutable';
+import { Map, fromJS } from 'immutable';
 import { pender } from 'redux-pender';
 
 import * as CommunityAPI from 'lib/api/community';
@@ -43,7 +43,7 @@ export const deleteComment = createAction(DELETE_COMMENT, CommunityAPI.deleteCom
 */
 
 const initialState = Map({
-    threads: List(),
+    threads: null,
     page: 0,
     rowsPerPage: 10,
 });

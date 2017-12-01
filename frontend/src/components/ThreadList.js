@@ -9,7 +9,7 @@ import ThreadTable from 'components/ThreadTable';
 
 const styles = theme => ({
     root: {
-        padding: [theme.spacing.unit * 2, theme.spacing.unit],
+        padding: theme.spacing.unit * 2
     },
     flexGrow: {
         flex: '1 1 auto',

@@ -6,3 +6,5 @@ export { default as WorksContainer } from './WorksContainer';
 export { default as WorkDetailContainer } from './WorkDetailContainer';
 export { default as PortfolioContainer } from './PortfolioContainer';
 export { default as ThreadListContainer } from './ThreadListContainer';
+export { default as ThreadDetailContainer } from './ThreadDetailContainer';
+export { default as CommentsContainer } from './CommentsContainer';

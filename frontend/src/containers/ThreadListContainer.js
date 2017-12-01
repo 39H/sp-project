@@ -32,7 +32,7 @@ class ThreadListContainer extends Component {
         const { CommunityActions, threads, page, rowsPerPage, loading } = this.props;
         const { handleChangePage, handleChangeRowsPerPage } = this;
 
-        if(threads.isEmpty() || loading) {
+        if(!threads || loading) {
             return <Spinner/>
         }
 

@@ -14,19 +14,9 @@ class HeaderContainer extends Component {
         authActions.showLoginModal();
     };
 
-    handleLoginClose = () => {
-        const { authActions } = this.props;
-        authActions.hideLoginModal();
-    };
-
     handleRegisterOpen = () => {
         const { authActions } = this.props;
         authActions.showRegisterModal();  
-    };
-
-    handleRegisterClose = () => {
-        const { authActions } = this.props;
-        authActions.hideRegisterModal();
     };
 
     handleLogout = async () => {
@@ -48,12 +38,8 @@ class HeaderContainer extends Component {
             <Header
                 user={user}
                 userInfo={userInfo}
-                openLogin={openLogin}
-                openRegister={openRegister}
                 onShowLogin={handleLoginOpen}
-                onHideLogin={handleLoginClose}
                 onShowRegister={handleRegisterOpen}
-                onHideRegister={handleRegisterClose}
                 onLogout={handleLogout}
             />
         );

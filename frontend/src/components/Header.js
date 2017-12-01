@@ -58,17 +58,13 @@ class Header extends Component {
         const {
             user,
             userInfo,
-            openLogin,
-            openRegister,
             onShowLogin,
-            onHideLogin,
             onShowRegister,
-            onHideRegister,
             onLogout,
         } = this.props;
         const { openDrawer } = this.state;
 
-        const { displayName, photo, profile } = userInfo.toJS();
+        const { displayName, photo/*, profile*/ } = userInfo.toJS();
 
         return (
             <div className={classes.root}>
@@ -81,13 +77,13 @@ class Header extends Component {
                         { user ?
                         <div className={classes.loginInfo}>
                             <Avatar
-                                photo={userInfo.get('photo')}
-                                displayName={userInfo.get('displayName')}
+                                photo={photo}
+                                displayName={displayName}
                                 size={32}
                                 className={classes.avatar}
                             />
                             <Link to={'/portfolio/'+user.get('userName')} className={classes.link}>
-                            <Typography type="body2" color="inherit">{userInfo.get('displayName')}</Typography>
+                            <Typography type="body2" color="inherit">{displayName}</Typography>
                             </Link>
                             <IconButton onClick={onLogout} color="contrast" aria-label="Menu">
                                 <ExitToAppIcon />

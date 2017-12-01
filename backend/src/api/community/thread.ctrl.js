@@ -20,8 +20,9 @@ exports.getThreads = async (req, res) => {
             const { id, subject, createdAt, updatedAt } = thread;
             const writer = await thread.getUser();
             const { displayName, userName } = writer;
+            const comments = await thread.countComments();
 
-            results.push({ id, subject, createdAt, updatedAt, displayName, userName });
+            results.push({ id, subject, createdAt, updatedAt, displayName, userName, hostName:host.userName, comments });
         }));
 
         res.json(results);

@@ -43,7 +43,7 @@ const colors = [
 
 export default function(displayName) {
     if(displayName && displayName !== '')
-        return colors[parseInt(displayName.charCodeAt(0).toString().slice(-1))];
+        return colors[parseInt(displayName.charCodeAt(0).toString().slice(-1), 10)];
     else
         return {bg: '#FFFFFF', fg: '$000000'}
 };

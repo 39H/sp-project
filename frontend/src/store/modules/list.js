@@ -1,4 +1,4 @@
-import { createAction, handleActions, handleAction } from 'redux-actions';
+import { createAction, handleActions } from 'redux-actions';
 
 import { Map, List, fromJS } from 'immutable';
 import { pender } from 'redux-pender';
@@ -15,7 +15,7 @@ export const getWorksByLikes = createAction(GET_WORKS_BY_LIKES, ListAPI.likes);
 export const getWorksByUser = createAction(GET_WORKS_BY_USER, ListAPI.user); // ({userName})
 
 const initialState = Map({
-    works: List(),
+    works: null,
 });
 
 export default handleActions({

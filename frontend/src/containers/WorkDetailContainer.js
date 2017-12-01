@@ -17,9 +17,9 @@ class WorkDetailContainer extends Component {
 
     componentWillReceiveProps(nextProps) {
         if(nextProps.workid !== this.props.workid) {
-            const { WorkActions, workid } = this.props;
-            WorkActions.getWork({id: workid});
-            WorkActions.getLiked({id: workid});
+            const { WorkActions } = this.props;
+            WorkActions.getWork({id: nextProps.workid});
+            WorkActions.getLiked({id: nextProps.workid});
         }
     }
 

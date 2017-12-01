@@ -1,14 +1,14 @@
 import React, { Component } from 'react';
-import { HeaderContainer, CommunityContainer, ThreadListContainer, PortfolioContainer } from 'containers';
+import { HeaderContainer, ThreadDetailContainer, ThreadListContainer, PortfolioContainer } from 'containers';
 
 class Thread extends Component {
     render() {
-        const { username:userName } = this.props.match.params;
+        const { username:userName, threadid: threadId } = this.props.match.params;
         return (
             <div>
                 <HeaderContainer />
                 <PortfolioContainer select={1} userName={userName}>
-                    <ThreadListContainer userName={userName} />
+                    <ThreadDetailContainer userName={userName} threadId={threadId} />
                 </PortfolioContainer>
             </div>
         );

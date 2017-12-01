@@ -17,7 +17,7 @@ exports.getComments = async (req, res) => {
             return res.status(404).json({msg: '게시글을 찾지 못했습니다.'});
         }
 
-        const comments = await thread.getComments({order: [['createdAt','DESC']]});
+        const comments = await thread.getComments({order: [['createdAt','ASC']]});
 
         const results = [];
         await Promise.all(comments.map(async comment => {
@@ -52,7 +52,10 @@ exports.writeComment = async (req, res) => {
         const thread = await Thread.findById(threadId);
         const writed = await Comment.write({user, thread, content});
 
-        return res.json(writed);
+        const { id, Content, ThreadId, updatedAt, createdAt } = writed;
+        const { userName, displayName } = user;
+
+        return res.json({ id, content:Content, ThreadId, updatedAt, createdAt, userName, displayName });
     } catch(error) {
         res.status(500).json(error);
     }

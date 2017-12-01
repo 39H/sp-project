@@ -1,4 +1,4 @@
-import { createAction, handleActions, handleAction } from 'redux-actions';
+import { createAction, handleActions } from 'redux-actions';
 
 import { Map, List, fromJS } from 'immutable';
 import { pender } from 'redux-pender';
@@ -23,8 +23,6 @@ const initialState = Map({
     userInfo: Map(),
     subscribed: false,
     mode: 0, // 0: works, 1: community
-    works: List(),
-    threads: List(),
 });
 
 export default handleActions({
