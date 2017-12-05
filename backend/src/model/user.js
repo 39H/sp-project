@@ -50,6 +50,7 @@ module.exports = (sequelize, DataTypes) => {
         User.hasMany(model.Thread, {as: 'HostedThreads', foreignKey: 'HostId'});
         User.hasMany(model.Thread, {as: 'Threads'});
         User.hasMany(model.Comment, {as: 'Comments'});
+        User.hasMany(model.Attachment, {as: 'Attachments'});
     };
 
     User.findByEmail = function(email) {

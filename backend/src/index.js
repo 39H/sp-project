@@ -17,12 +17,15 @@ const {
     PORT: port
 } = process.env;
 
-app.use(bodyParser.json());
+app.use(bodyParser.json({limit: '5mb'}));
 app.use(cookieParser());
 
 app.use(jwtMiddleware);
 
 app.use('/', express.static(path.join(__dirname, '../../frontend/build')));
+app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
+app.use('/thumbnails', express.static(path.join(__dirname, '../thumbnails')));
+app.use('/photos', express.static(path.join(__dirname, '../photos')));
 
 app.use('/api', api);
 

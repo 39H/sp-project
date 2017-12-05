@@ -50,9 +50,10 @@ exports.writeThread = async(req, res) => {
         }
 
         const writer = await User.findById(req.user.id);
-
         const writed = await Thread.write({host, writer, subject, content});
-        res.json(writed);
+        const { id } = writed;
+
+        res.json({id, userName: hostUserName});
     } catch(error) {
         res.status(500).json(error);
     }

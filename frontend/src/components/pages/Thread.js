@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { HeaderContainer, ThreadDetailContainer, ThreadListContainer, PortfolioContainer } from 'containers';
+import { HeaderContainer, ThreadDetailContainer, PortfolioContainer, CommunityThreadsContainer } from 'containers';
 
 class Thread extends Component {
     render() {

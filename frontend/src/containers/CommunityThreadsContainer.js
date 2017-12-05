@@ -5,16 +5,20 @@ import * as communityActions from 'store/modules/community';
 
 import Spinner from 'components/Spinner';
 import ThreadList from 'components/ThreadList';
+import ThreadFooter from 'components/ThreadFooter';
+import WriteButton from 'components/WriteButton';
 
-class ThreadListContainer extends Component {
+class CommunityThreadsContainer extends Component {
+    componentDidMount() {
+        const {CommunityActions} = this.props;
+        this.getThreads();
+        CommunityActions.setPage({page: 0});
+    }
+
     getThreads = () => {
         const { CommunityActions, userName } = this.props;
         CommunityActions.getThreads({userName});
     };
-
-    componentDidMount() {
-        this.getThreads();
-    }
 
     handleChangePage = async (event, page) => {
         const { CommunityActions, userName } = this.props;
@@ -29,7 +33,7 @@ class ThreadListContainer extends Component {
     };
 
     render() {
-        const { CommunityActions, threads, page, rowsPerPage, loading } = this.props;
+        const { CommunityActions, user, userName, threads, page, rowsPerPage, loading } = this.props;
         const { handleChangePage, handleChangeRowsPerPage } = this;
 
         if(!threads || loading) {
@@ -37,19 +41,25 @@ class ThreadListContainer extends Component {
         }
 
         return (
-            <ThreadList
-                onChangePage = {handleChangePage}
-                onChangeRowsPerPage = {handleChangeRowsPerPage}
-                data = {threads}
-                page = {page}
-                rowsPerPage = {rowsPerPage}
-            />
+            <div>
+                <ThreadList
+                    onChangePage = {handleChangePage}
+                    onChangeRowsPerPage = {handleChangeRowsPerPage}
+                    data = {threads}
+                    page = {page}
+                    rowsPerPage = {rowsPerPage}
+                />
+                <ThreadFooter>
+                    {!user ? null : <WriteButton userName={userName}/>}
+                </ThreadFooter>
+            </div>
         );
     }
 }
 
 export default connect(
     (state) => ({
+        user: state.user.get('user'),
         threads: state.community.get('threads'),
         page: state.community.get('page'),
         rowsPerPage: state.community.get('rowsPerPage'),
@@ -58,4 +68,4 @@ export default connect(
     (dispatch) => ({
         CommunityActions: bindActionCreators(communityActions, dispatch),
     })
-)(ThreadListContainer);
+)(CommunityThreadsContainer);

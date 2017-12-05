@@ -16,14 +16,13 @@ exports.uploadWork = async (req, res) => {
     // todo: workType 검사, workURL 검사.. (동영상일땐 유투브 regex), 첨부파일 어케할지 -> attachment api로 따로 뻄, Joi 스키마 완성,
     // thumbnail은 자동 생성? (유투브 -> api이용, 첨부파일 -> 업로드시..)
 
-    const {subject, workType, workURL, content } = body;
-
-    if(workType === 'image') {
+    if(body.workType === 'image') {
         const schema = Joi.object({
             subject: Joi.string().required(),
             workType: Joi.string().required(),
             workURL: Joi.string().uri(),
-            content: Joi.string()
+            content: Joi.string(),
+            thumbnail: Joi.string().required(),
         });
 
         const result = Joi.validate(body, schema);
@@ -32,12 +31,17 @@ exports.uploadWork = async (req, res) => {
             return res.status(400).json(result.error);
         }
 
-        try {
+        const { subject, workType, content, thumbnail } = body;
 
+        try {
+            const uploaded = await Work.uploadWork({subject, workType, thumbnail, content, UserId:user.id});
+
+            const { id } = uploaded;
+            res.json({id, workType});
         } catch(error) {
             res.status(500).json(error);
         }
-    } else if (workType === 'video') {
+    } else if (body.workType === 'video') {
         const schema = Joi.object({
             subject: Joi.string().required(),
             workType: Joi.string().required(),
@@ -51,6 +55,7 @@ exports.uploadWork = async (req, res) => {
             return res.status(400).json(result.error);
         }
 
+        const { subject, workType, workURL, content } = body;
 
         const match = workURL.match(/(?:youtube(?:-nocookie)?\.com\/(?:[^\/\n\s]+\/\S+\/|(?:v|e(?:mbed)?)\/|\S*?[?&]v=)|youtu\.be\/)([a-zA-Z0-9_-]{11})/i);
         const videoId = match[1];
@@ -60,11 +65,13 @@ exports.uploadWork = async (req, res) => {
             const thumbnail = repos.items[0].snippet.thumbnails.medium.url;
 
             const uploaded = await Work.uploadWork({subject, workType, workURL: 'https://www.youtube.com/embed/'+videoId, thumbnail, content, UserId:user.id});
-            res.json(uploaded);
+
+            const { id } = uploaded;
+            res.json({id, workType});
         } catch(error) {
             res.status(500).json(error);
         }
-    } else if (workType === 'text') {
+    } else if (body.workType === 'text') {
         const schema = Joi.object({
             subject: Joi.string().required(),
             workType: Joi.string().required(),

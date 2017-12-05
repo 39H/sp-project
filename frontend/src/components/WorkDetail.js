@@ -9,6 +9,7 @@ import Button from 'material-ui/Button';
 import Paper from 'material-ui/Paper';
 
 import Avatar from 'components/Avatar';
+import { ImageWorkContainer } from 'containers';
 
 import FavoriteIcon from 'material-ui-icons/Favorite';
 import { blue } from 'material-ui/colors';
@@ -55,6 +56,9 @@ const styles = theme => ({
         height: 0,
         paddingBottom: '56.25%',
     },
+    imageWrap: {
+        marginBottom: -20,
+    },
     video: {
         position: 'absolute',
         top: 0,
@@ -100,9 +104,8 @@ class WorkDetail extends Component {
                     </Button>
                 </div>
                 <Paper className={classes.mediaPaper}>
-                    <div className={classes.videoWrap}>
-                        <iframe className={classes.video} src={workURL} frameborder="0" gesture="media" allow="encrypted-media" allowfullscreen="true"></iframe>
-                    </div>
+                        {workType === 'image' && <div className={classes.imageWrap}><ImageWorkContainer workid={id} classes={classes} /></div>}
+                        {workType === 'video' && <div className={classes.videoWrap}><iframe className={classes.video} src={workURL} frameborder="0" gesture="media" allow="encrypted-media" allowfullscreen="true"></iframe></div>}
                 </Paper>
                 <div className={classes.contentWrap}>
                     {nl2pbr(content)}

@@ -4,6 +4,9 @@ import Work from './Work';
 import Portfolio from './Portfolio';
 import Community from './Community';
 import Thread from './Thread';
+import ThreadWrite from './ThreadWrite';
+import UploadWork from './UploadWork';
+import Profile from './Profile';
 
 export {
     Home,
@@ -12,4 +15,7 @@ export {
     Portfolio,
     Community,
     Thread,
+    ThreadWrite,
+    UploadWork,
+    Profile,
 };

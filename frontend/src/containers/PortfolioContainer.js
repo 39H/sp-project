@@ -4,6 +4,7 @@ import { bindActionCreators } from 'redux';
 import * as portfolioActions from 'store/modules/portfolio';
 
 import Portfolio from 'components/Portfolio';
+import MyPortfolioTop from 'components/MyPortfolioTop';
 import { WorksContainer } from 'containers';
 
 class PortfolioContainer extends Component {
@@ -30,17 +31,20 @@ class PortfolioContainer extends Component {
 
     render() {
         const { children, select } = this.props;
-        const { PortfolioActions, userName, userInfo, subscribed } = this.props;
+        const { PortfolioActions, user, userName, userInfo, subscribed } = this.props;
         const { handleSubscribe } = this;
         return (
             <Portfolio
                 userName={userName}
+                user={user}
                 userInfo={userInfo}
                 subscribed={subscribed}
                 toggleSubscribe={handleSubscribe}
                 select={select}
             >
-            {children ? children : <WorksContainer type="user" userName={userName} />}
+            {children
+                ? children
+                : <div>{!!user && user.get('userName') === userName && <MyPortfolioTop userName={userName}/>}<WorksContainer type="user" userName={userName} /></div>}
             </Portfolio>
         );
     }
@@ -48,6 +52,7 @@ class PortfolioContainer extends Component {
 
 export default connect(
     (state) => ({
+        user: state.user.get('user'),
         userInfo: state.portfolio.get('userInfo'),
         subscribed: state.portfolio.get('subscribed'),
     }),

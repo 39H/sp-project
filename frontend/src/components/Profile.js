@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { withStyles } from 'material-ui/styles';
 
@@ -25,11 +26,15 @@ const styles = theme => ({
     subscribe: {
         marginTop: theme.spacing.unit * 3,
     },
+    link: {
+        textDecoration: 'none',
+        color: 'inherit',
+    },
 });
 
 function Profile(props) {
     const { classes } = props;
-    const { userInfo, subscribed, toggleSubscribe } = props;
+    const { userInfo, user, subscribed, toggleSubscribe } = props;
     const { displayName, userName, profile, photo } = userInfo.toJS();
 
     return (
@@ -42,7 +47,8 @@ function Profile(props) {
                 />
                 <Typography className={classes.displayName} type="title" component="h2">{displayName}</Typography>
                 <Typography className={classes.description} type="body1" component="div">{!profile || profile === '' ? 'No description.' : profile}</Typography>
-                <Button onClick={toggleSubscribe} className={classes.subscribe} raised color={subscribed ? 'accent' : 'default'}>{subscribed ? 'Subscribed' : 'Subscribe'}</Button>
+                {!!user && user.get('userName') !== userName && <Button onClick={toggleSubscribe} className={classes.subscribe} raised color={subscribed ? 'accent' : 'default'}>{subscribed ? 'Subscribed' : 'Subscribe'}</Button>}
+                {user && user.get('userName') === userName && <Link to={'/profile'} className={classes.link}><Button className={classes.subscribe} raised color="primary" component="div">Edit Profile</Button></Link>}
             </Paper>
         </div>
     );

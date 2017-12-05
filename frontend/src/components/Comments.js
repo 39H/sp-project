@@ -79,7 +79,7 @@ class Comments extends Component {
 
     render() {
         const { classes } = this.props;
-        const { data, forms, onChangeInput, onWriteComment } = this.props;
+        const { data, forms, user, onChangeInput, onWriteComment } = this.props;
 
         const { content } = forms.toJS();
         const comments = data.toJS();
@@ -97,9 +97,10 @@ class Comments extends Component {
                                 type="text"
                                 value={content}
                                 onChange={onChangeInput}
+                                disabled={!user}
                             />
                         </FormControl>
-                        <Button onClick={onWriteComment} className={classes.commentButton} raised color="primary">Send</Button>
+                        <Button onClick={onWriteComment} disabled={!user} className={classes.commentButton} raised color="primary">Send</Button>
                     </div>
                 </div>
                 <ul className={classes.commentList}>

@@ -5,17 +5,26 @@ import { pender } from 'redux-pender';
 
 import * as AuthAPI from 'lib/api/auth';
 import * as UserAPI from 'lib/api/user';
+import * as AttachmentAPI from 'lib/api/attachment';
 
 // action types
 const SET_USER = 'user/SET_USER';
 const CHECK_LOGIN_STATUS = 'user/CHECK_LOGIN_STATUS';
 const GET_MY_INFO = 'user/GET_MY_INFO';
 const LOGOUT = 'user/LOGOUT';
+const CHANGE_INPUT = 'user/CHANGE_INPUT';
+const UPLOAD_PHOTO = 'user/UPLOAD_PHOTO';
+const EDIT_PROFILE = 'user/EDIT_PROFILE';
+const SET_DEFAULT = 'user/SET_DEFAULT';
 
 export const setUser = createAction(SET_USER); // ({user 객체})
 export const checkLoginStatus = createAction(CHECK_LOGIN_STATUS, AuthAPI.checkLoginStatus);
 export const getMyInfo = createAction(GET_MY_INFO, UserAPI.getMyInfo);
 export const logout = createAction(LOGOUT);
+export const changeInput = createAction(CHANGE_INPUT); // ({name, value})
+export const editProfile = createAction(EDIT_PROFILE, UserAPI.editProfile); // ({profile})
+export const setDefault = createAction(SET_DEFAULT);
+export const uploadPhoto = createAction(UPLOAD_PHOTO, AttachmentAPI.uploadPhoto); // ({image})
 
 const initialState = Map({
     user: null, // Map({id, userName /*, displayName */})
@@ -24,6 +33,10 @@ const initialState = Map({
         photo: '',
         profile: '',
     }),
+    form: Map({
+        profile: '',
+    }),
+    editResult: false,
 });
 
 export default handleActions({
@@ -35,12 +48,13 @@ export default handleActions({
         type: GET_MY_INFO,
         onSuccess: (state, action) => {
             const { data: info } = action.payload;
-            return state.set('info', fromJS(info));
+            return state.set('info', fromJS(info))
+                        .setIn(['form', 'profile'], info.profile);
         }
     }),
     ...pender({
         type: CHECK_LOGIN_STATUS,
-        onSuccess: (state ,action) => {
+        onSuccess: (state, action) => {
             const { user } = action.payload.data;
             return state.set('user', Map(user));
         },
@@ -52,4 +66,28 @@ export default handleActions({
         return state.set('user', null)
                     .set('info', initialState.get('info'));
     },
+    [CHANGE_INPUT]: (state, action) => {
+        const { name, value } = action.payload;
+        return state.setIn(['form', name], value);
+    },
+    ...pender({
+        type: EDIT_PROFILE,
+        onSuccess: (state, action) => {
+            const { profile } = action.payload.data;
+            return state.set('editResult', true)
+                        .setIn(['info', 'profile'], profile);
+        }
+    }),
+    [SET_DEFAULT]: (state, action) => {
+        return state.set('form', initialState.get('form'))
+                    .setIn(['form', 'profile'], state.getIn(['info', 'profile']))
+                    .set('editResult', false);
+    },
+    ...pender({
+        type: UPLOAD_PHOTO,
+        onSuccess: (state, action) => {
+            const { url } = action.payload.data;
+            return state.setIn(['info', 'photo'], url);
+        }
+    }),
 }, initialState);

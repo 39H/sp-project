@@ -51,4 +51,23 @@ exports.edit = (req, res) => {
         });
 };
 
+exports.patchProfile = async (req, res) => {
+    const { profile } = req.body;
+    if(!req.user) {
+        return res.status(403).json({msg: '먼저 로그인 하세요.'});
+    }
+
+    try {
+        const user = await User.findById(req.user.id);
+        if(!user) {
+            return res.status(404).json({msg: '유효하지 않은 사용자입니다.'});
+        }
+
+        await user.update({profile});
+        res.json({profile});
+    } catch(error) {
+        res.status(500).json({error});
+    }
+};
+
 // 프로필사진같은거 업로드 api 따로 구현해야되나? (이건 json 형식이 아니라 form-data 형식일듯..)

@@ -90,6 +90,18 @@ module.exports = function(proxy, allowedHost) {
         target: 'http://localhost:5000',
         secure: false        
       },
+      '/uploads': {
+        target: 'http://localhost:5000',
+        secure: false
+      },
+      '/thumbnails': {
+        target: 'http://localhost:5000',
+        secure: false
+      },
+      '/photos': {
+        target: 'http://localhost:5000',
+        secure: false
+      },
     },
     before(app) {
       // This lets us open files from the runtime error overlay.

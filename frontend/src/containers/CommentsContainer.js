@@ -38,7 +38,7 @@ class CommentsContainer extends Component {
     };
 
     render() {
-        const { threadId, comments, form, loading } = this.props;
+        const { threadId, user, comments, form, loading } = this.props;
         const { handleChangeInput, handleWriteComment } = this;
 
         if(!comments || loading) return <Spinner/>
@@ -47,6 +47,7 @@ class CommentsContainer extends Component {
             <Comments
                 data={comments}
                 forms={form}
+                user={user}
                 onChangeInput={handleChangeInput}
                 onWriteComment={handleWriteComment}
             />
@@ -56,6 +57,7 @@ class CommentsContainer extends Component {
 
 export default connect(
     (state) => ({
+        user: state.user.get('user'),
         comments: state.comment.get('comments'),
         form: state.comment.get('form'),
         loading: state.pender.pending['comment/GET_COMMENTS'],
