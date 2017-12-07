@@ -37,9 +37,18 @@ class CommentsContainer extends Component {
         await CommentActions.getComments({userName, threadId});
     };
 
+    handleDelete = async ({commentId}) => {
+        const { CommentActions, userName, threadId } = this.props;
+        let confirm = window.confirm("Are you sure you want to delete?");
+        if(confirm) {
+            await CommentActions.deleteComment({userName, ThreadId: threadId, commentId});
+            CommentActions.getComments({userName, threadId});
+        }
+    };
+
     render() {
         const { threadId, user, comments, form, loading } = this.props;
-        const { handleChangeInput, handleWriteComment } = this;
+        const { handleChangeInput, handleWriteComment, handleDelete } = this;
 
         if(!comments || loading) return <Spinner/>
 
@@ -50,6 +59,7 @@ class CommentsContainer extends Component {
                 user={user}
                 onChangeInput={handleChangeInput}
                 onWriteComment={handleWriteComment}
+                onDelete={handleDelete}
             />
         );
     }

@@ -105,10 +105,11 @@ class WorkDetail extends Component {
                 </div>
                 <Paper className={classes.mediaPaper}>
                         {workType === 'image' && <div className={classes.imageWrap}><ImageWorkContainer workid={id} classes={classes} /></div>}
-                        {workType === 'video' && <div className={classes.videoWrap}><iframe className={classes.video} src={workURL} frameborder="0" gesture="media" allow="encrypted-media" allowfullscreen="true"></iframe></div>}
+                        {workType === 'video' && <div className={classes.videoWrap}><iframe className={classes.video} src={workURL} frameBorder="0" gesture="media" allow="encrypted-media" allowFullScreen="true"></iframe></div>}
+                        {workType === 'text' && nl2pbr(content)}
                 </Paper>
                 <div className={classes.contentWrap}>
-                    {nl2pbr(content)}
+                    {workType !== 'text' && nl2pbr(content)}
                 </div>
             </div>
         );

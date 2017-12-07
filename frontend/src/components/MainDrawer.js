@@ -8,7 +8,7 @@ import ListSubheader from 'material-ui/List/ListSubheader';
 import List, { ListItem, ListItemIcon, ListItemText } from 'material-ui/List';
 import Toolbar from 'material-ui/Toolbar';
 import IconButton from 'material-ui/IconButton';
-import Avatar from 'material-ui/Avatar';
+import Avatar from 'components/Avatar';
 
 import MenuIcon from 'material-ui-icons/Menu';
 import SettingsIcon from 'material-ui-icons/Settings';
@@ -30,11 +30,7 @@ const styles = theme => ({
         marginRight: 20,
     },
     listSubheader: {
-        textTransform:'uppercase',
-    },
-    avatar: {
-        width: 24,
-        height: 24,
+        textTransform: 'uppercase',
     },
     subscriptionsName: {
         overflow: 'hidden',
@@ -44,13 +40,17 @@ const styles = theme => ({
         whiteSpace: 'nowrap',
         textOverflow: 'ellipsis'
     },
+    link: {
+        color: 'inherit',
+        textDecoration: 'none',
+    },
 });
 
 function MainDrawer(props) {
-    const { classes, handleDrawerClose } = props;
+    const { classes, handleDrawerClose, user, subscriptions } = props;
 
     return (
-        <Drawer classes={{paper: classes.drawerPaper}} anchor="left" open={props.open} onRequestClose={handleDrawerClose}>
+        <Drawer classes={{ paper: classes.drawerPaper }} anchor="left" open={props.open} onRequestClose={handleDrawerClose}>
             <div className={classes.drawerInner}>
                 <div className={classes.drawerHeader}>
                     <Toolbar>
@@ -60,24 +60,36 @@ function MainDrawer(props) {
                     </Toolbar>
                 </div>
                 <Divider />
-                <List><MainListItems /></List>
-                <Divider />
-                <List dense subheader={<ListSubheader className={classes.listSubheader}>Subscriptions</ListSubheader>}>
-                    {[0, 1, 2, 3].map(value => (
-                        <ListItem key={value} button>
-                            <Avatar className={classes.avatar} alt="Juyeong Men Music" src="https://material-ui-next.com/static/images/remy.jpg" />
-                            <ListItemText classes={{text: classes.subscriptionsNameText}} className={classes.subscriptionsName} primary="Juyeong Men" />
-                        </ListItem>
-                    ))}
-                </List>
+                <List><MainListItems user={user} /></List>
+                {!!user && <Divider />}
+                {!!user && !!subscriptions && <List dense subheader={<ListSubheader className={classes.listSubheader}>Subscriptions</ListSubheader>}>
+                    {subscriptions.toJS().map(subscription => {
+                        return (
+                            <Link to={'/portfolio/'+subscription.userName} className={classes.link} key={subscription.userName}>
+                                <ListItem button>
+                                    <Avatar
+                                        photo={subscription.photo}
+                                        displayName={subscription.displayName}
+                                        size={24}
+                                        className={classes.avatar}
+                                    />
+                                    <ListItemText classes={{ text: classes.subscriptionsNameText }} className={classes.subscriptionsName} primary={subscription.displayName} />
+                                </ListItem>
+                            </Link>
+                        );
+                    })}
+                </List>}
                 <Divider />
                 <List>
-                    <ListItem button>
-                        <ListItemIcon> 
-                            <SettingsIcon />
-                        </ListItemIcon>
-                        <ListItemText primary="Settings" />
-                    </ListItem>
+                    {!!user &&
+                    <Link to={'/settings'} className={classes.link}>
+                        <ListItem button>
+                            <ListItemIcon>
+                                <SettingsIcon />
+                            </ListItemIcon>
+                            <ListItemText primary="Settings" />
+                        </ListItem>
+                    </Link>}
                 </List>
             </div>
         </Drawer>

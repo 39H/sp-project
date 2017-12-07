@@ -10,20 +10,20 @@ class HeaderContainer extends Component {
     // base 에서 drawer 처리?? 그냥 header 컴포넌트 state로??
 
     handleLoginOpen = () => {
-        const { authActions } = this.props;
-        authActions.showLoginModal();
+        const { AuthActions } = this.props;
+        AuthActions.showLoginModal();
     };
 
     handleRegisterOpen = () => {
-        const { authActions } = this.props;
-        authActions.showRegisterModal();  
+        const { AuthActions } = this.props;
+        AuthActions.showRegisterModal();  
     };
 
     handleLogout = async () => {
-        const { authActions, userActions } = this.props;
+        const { AuthActions, UserActions } = this.props;
         try {
-            userActions.logout();
-            await authActions.logout();
+            UserActions.logout();
+            await AuthActions.logout();
             window.location.href = '/';
         } catch(e) {
 
@@ -31,13 +31,14 @@ class HeaderContainer extends Component {
     };
     
     render() {
-        const { user, userInfo, openLogin, openRegister } = this.props;
-        const { handleLoginOpen, handleLoginClose, handleRegisterOpen, handleRegisterClose, handleLogout } = this;
+        const { user, userInfo, subscriptions, openLogin, openRegister } = this.props;
+        const { handleLoginOpen, handleRegisterOpen, handleLogout } = this;
 
         return (
             <Header
                 user={user}
                 userInfo={userInfo}
+                subscriptions={subscriptions}
                 onShowLogin={handleLoginOpen}
                 onShowRegister={handleRegisterOpen}
                 onLogout={handleLogout}
@@ -50,11 +51,12 @@ export default connect(
     (state) => ({
         user: state.user.get('user'),
         userInfo: state.user.get('info'),
+        subscriptions: state.user.get('subscriptions'),
         openLogin: state.auth.getIn(['loginModal', 'open']),
         openRegister: state.auth.getIn(['registerModal', 'open']),
     }),
     (dispatch) => ({
-        userActions: bindActionCreators(userActions, dispatch),
-        authActions: bindActionCreators(authActions, dispatch),
+        UserActions: bindActionCreators(userActions, dispatch),
+        AuthActions: bindActionCreators(authActions, dispatch),
     })
 )(HeaderContainer);

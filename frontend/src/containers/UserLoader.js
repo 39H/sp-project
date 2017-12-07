@@ -11,6 +11,7 @@ class UserLoader extends Component {
             try {
                 await UserActions.checkLoginStatus();
                 await UserActions.getMyInfo();
+                await UserActions.getSubscriptions();
             } catch(e) {
                 return;
             }

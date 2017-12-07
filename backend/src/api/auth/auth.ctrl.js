@@ -1,5 +1,6 @@
 const Joi = require('joi');
 const User = (require('model')).User;
+const transporter = require('lib/mailer');
 
 exports.register = (req, res) => {
     let body = req.body;
@@ -138,4 +139,52 @@ exports.delete = (req, res) => {
         }).catch(error => {
             return res.status(403).json({msg: "Promise 오류"});
         });
+};
+
+
+exports.forgotPassword = async (req, res) => {
+    const {email} = req.body;
+
+    try {
+        const user = await User.findByEmail(email);
+        if(!user) {
+            return res.json();
+        }
+
+        const code = new Date().valueOf();
+        user.update({findPasswordCode: code});
+
+        let data = {
+            from: 'admin@the.gg',
+            to: email,
+            subject: 'Reset Password Url',
+            text: '/password/'+code
+        };
+
+        transporter.sendMail(data);
+        res.json();
+    } catch(error) {
+        res.status(500).json({error});
+    }
+};
+
+exports.changeForgotPassword = async (req, res) => {
+    const {email, code, newPassword} = req.body;
+
+    try {
+        const user = await User.findByEmail(email);
+        if(!user) {
+            return res.status(403).json();
+        }
+
+        if(!user.findPasswordCode || user.findPasswordCode === '' || user.findPasswordCode !== code) {
+            return res.status(403).json();
+        }
+
+        await user.update({findPasswordCode: null});
+        await user.password_edit(newPassword);
+        res.json();
+    } catch(error) {
+        res.status(500).json({error});
+    }
 };

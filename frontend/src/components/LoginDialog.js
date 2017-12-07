@@ -53,7 +53,7 @@ class LoginDialog extends Component {
 
     render() {
         const { classes } = this.props;
-        const { open, forms, onClose, onShowRegister, onChangeInput, onLogin, pending } = this.props;
+        const { open, forms, onClose, onShowRegister, onShowPassword, onChangeInput, onLogin, pending } = this.props;
 
         const { email, password } = forms.toJS();
 
@@ -88,7 +88,7 @@ class LoginDialog extends Component {
                                 </InputAdornment>
                             }
                         />
-                    <FormHelperText><a className={classes.link} href="#">Forgot?</a></FormHelperText>
+                    <FormHelperText><a onClick={onShowPassword} className={classes.link}>Forgot?</a></FormHelperText>
                     </FormControl>
                     <Button onClick={onLogin} raised color="primary" className={classes.button}>Login</Button>
                     <Divider />

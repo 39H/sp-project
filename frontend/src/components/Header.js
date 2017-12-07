@@ -14,7 +14,7 @@ import ExitToAppIcon from 'material-ui-icons/ExitToApp';
 import MainDrawer from './MainDrawer';
 import Avatar from './Avatar';
 
-import { LoginDialogContainer, RegisterDialogContainer } from 'containers';
+import { LoginDialogContainer, RegisterDialogContainer, ForgotPasswordDialogContainer } from 'containers';
 
 const styles = theme => ({
     root: {
@@ -58,6 +58,7 @@ class Header extends Component {
         const {
             user,
             userInfo,
+            subscriptions,
             onShowLogin,
             onShowRegister,
             onLogout,
@@ -98,7 +99,8 @@ class Header extends Component {
                 </AppBar>
                 <LoginDialogContainer />
                 <RegisterDialogContainer />
-                <MainDrawer open={openDrawer} handleDrawerClose={this.handleDrawerClose} />
+                <ForgotPasswordDialogContainer />
+                <MainDrawer open={openDrawer} handleDrawerClose={this.handleDrawerClose} user={user} subscriptions={subscriptions} />
             </div>
         );
     }

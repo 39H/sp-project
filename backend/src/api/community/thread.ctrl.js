@@ -106,7 +106,7 @@ exports.patchThread = async (req, res) => {
         }
 
         const patched = await thread.update({subject, content});
-        res.json(patched);
+        res.json({id: threadId, userName: hostUserName});
 
     } catch(error) {
         res.status(500).json(error);

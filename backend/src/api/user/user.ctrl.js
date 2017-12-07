@@ -70,4 +70,48 @@ exports.patchProfile = async (req, res) => {
     }
 };
 
-// 프로필사진같은거 업로드 api 따로 구현해야되나? (이건 json 형식이 아니라 form-data 형식일듯..)
+exports.patchPassword = async (req, res) => {
+    const { currentPassword, newPassword } = req.body;
+    if(!req.user) {
+        return res.status(403).json({msg: '먼저 로그인 하세요.'});
+    }
+
+    try {
+        const user = await User.findById(req.user.id);
+        if(!user) {
+            return res.status(404).json({msg: '유효하지 않은 사용자입니다.'});
+        }
+
+        if(!user.validatePassword(currentPassword)) {
+            return res.status(403).json({msg: '비밀번호 불일치'});
+        }
+
+        await user.password_edit(newPassword);
+        res.status(204).json();
+    } catch(error) {
+        res.status(500).json({error});
+    }
+};
+
+exports.deleteUser = async (req, res) => {
+    if(!req.user) {
+        return res.status(403).json({msg: '먼저 로그인 하세요.'});
+    }
+
+    try {
+        const user = await User.findById(req.user.id);
+        if(!user) {
+            return res.status(404).json({msg: '유효하지 않은 사용자입니다.'});
+        }
+
+        await user.delete();
+        res.cookie('access_token', null, {
+            httpOnly: true,
+            maxAge: 0
+        });
+
+        res.status(204).json();
+    } catch(error) {
+        res.status(500).json({error});
+    }
+};

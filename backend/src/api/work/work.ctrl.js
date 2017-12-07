@@ -85,8 +85,13 @@ exports.uploadWork = async (req, res) => {
             return res.status(400).json(result.error);
         }
 
+        const { subject, workType, content } = body;
+
         try {
-            
+            const uploaded = await Work.uploadWork({subject, workType, thumbnail: '/thumbnails/text.png', content, UserId:user.id});
+
+            const { id } = uploaded;
+            res.json({id, workType});
         } catch(error) {
             res.status(500).json(error);
         }
@@ -113,20 +118,19 @@ exports.getWork = async (req, res) => {
     }
 };
 
-exports.deleteWork = (req, res) => {
+exports.deleteWork = async (req, res) => {
     const { user } = req;
     const workId = req.params.work_id;
 
     if(!user) return res.status(403).json();
 
-    Work.findById(workId).then(work => {
-        if(!work) return res.status(404).json();
-        
-        if(user.id != work.UserId) return res.status(403).json({msg: '작품을 등록한 사용자가 아닙니다.'});
-        work.delete().then(deleted => {
-            res.json({workId});
-        });
-    }).catch(error => {
-        res.status(500).json(error);
-    });
+    try {
+        const work = await Work.findById(workId);
+        if(user.id !== work.UserId) return res.status(403).json({msg: '작품을 등록한 사용자가 아닙니다.'});
+        await work.destroy();
+
+        res.json();
+    } catch(error) {
+        res.json({error});
+    }
 };

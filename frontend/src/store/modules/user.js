@@ -1,16 +1,18 @@
 import { createAction, handleActions } from 'redux-actions';
 
-import { Map, fromJS } from 'immutable';
+import { Map, List, fromJS } from 'immutable';
 import { pender } from 'redux-pender';
 
 import * as AuthAPI from 'lib/api/auth';
 import * as UserAPI from 'lib/api/user';
 import * as AttachmentAPI from 'lib/api/attachment';
+import * as SubscribeAPI from 'lib/api/subscribe';
 
 // action types
 const SET_USER = 'user/SET_USER';
 const CHECK_LOGIN_STATUS = 'user/CHECK_LOGIN_STATUS';
 const GET_MY_INFO = 'user/GET_MY_INFO';
+const GET_SUBSCRIPTIONS = 'user/GET_SUBSCRIPTIONS';
 const LOGOUT = 'user/LOGOUT';
 const CHANGE_INPUT = 'user/CHANGE_INPUT';
 const UPLOAD_PHOTO = 'user/UPLOAD_PHOTO';
@@ -20,6 +22,7 @@ const SET_DEFAULT = 'user/SET_DEFAULT';
 export const setUser = createAction(SET_USER); // ({user 객체})
 export const checkLoginStatus = createAction(CHECK_LOGIN_STATUS, AuthAPI.checkLoginStatus);
 export const getMyInfo = createAction(GET_MY_INFO, UserAPI.getMyInfo);
+export const getSubscriptions = createAction(GET_SUBSCRIPTIONS, SubscribeAPI.getSubscriptions);
 export const logout = createAction(LOGOUT);
 export const changeInput = createAction(CHANGE_INPUT); // ({name, value})
 export const editProfile = createAction(EDIT_PROFILE, UserAPI.editProfile); // ({profile})
@@ -36,6 +39,7 @@ const initialState = Map({
     form: Map({
         profile: '',
     }),
+    subscriptions: List(),
     editResult: false,
 });
 
@@ -88,6 +92,13 @@ export default handleActions({
         onSuccess: (state, action) => {
             const { url } = action.payload.data;
             return state.setIn(['info', 'photo'], url);
+        }
+    }),
+    ...pender({
+        type: GET_SUBSCRIPTIONS,
+        onSuccess: (state, action) => {
+            const { data: subscriptions } = action.payload;
+            return state.set('subscriptions', fromJS(subscriptions));
         }
     }),
 }, initialState);

@@ -27,6 +27,8 @@ function getTitle(type) {
     switch(type) {
         case 'likes':
             return 'Most liked works';
+        case 'subscriptions':
+            return 'Subscriptions\' works';
         default:
             return 'Recent works';
     }

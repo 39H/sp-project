@@ -9,4 +9,8 @@ auth.post('/login', authCtrl.login); //@body : email, password
 auth.put('/edit', authCtrl.edit); //@body : userName, new_password
 auth.delete('/edit', authCtrl.delete); //@body : userName 
 auth.get('/check', authCtrl.check); //로그인 체크
+
+auth.post('/password', authCtrl.forgotPassword);
+auth.patch('/password', authCtrl.changeForgotPassword);
+
 module.exports = auth;

@@ -6,6 +6,7 @@ import * as workActions from 'store/modules/work';
 
 import Spinner from 'components/Spinner';
 import WorkDetail from 'components/WorkDetail';
+import WorkButtons from 'components/WorkButtons';
 
 class WorkDetailContainer extends Component {
 
@@ -29,14 +30,26 @@ class WorkDetailContainer extends Component {
         else await WorkActions.like({id: workid});
     };
 
+    handleDelete = async () => {
+        const { WorkActions, workid } = this.props;
+        let confirm = window.confirm("Are you sure you want to delete?");
+        if(confirm) {
+            await WorkActions.deleteWork({id: workid});
+            window.location.href = '/';
+        }
+    };
+
     render() {
-        const { WorkActions, work, loading, liked } = this.props;
-        const { handleLike } = this;
+        const { WorkActions, work, workid, loading, liked, user } = this.props;
+        const { handleLike, handleDelete } = this;
 
         if(!work || loading) return <Spinner/>;
 
         return (
-            <WorkDetail data={work} liked={liked} toggleLike={handleLike} />
+            <div>
+                <WorkDetail data={work} liked={liked} toggleLike={handleLike} />
+                {!!user && user.get('userName') === work.get('userName') && <WorkButtons onDelete={handleDelete} workId={workid}/>}
+            </div>
         );
     }
 }
@@ -45,6 +58,7 @@ export default connect(
     (state) => ({
         work: state.work.get('work'),
         liked: state.work.get('liked'),
+        user: state.user.get('user'),
         loading: state.pender.pending['work/GET_WORK'],
     }),
     (dispatch) => ({

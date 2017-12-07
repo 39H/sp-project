@@ -18,7 +18,7 @@ const styles = theme => ({
 });
 
 function MainListItems(props) {
-    const { classes } = props;
+    const { classes, user } = props;
 
     return (
         <div className={classes.root}>
@@ -38,12 +38,14 @@ function MainListItems(props) {
                     <ListItemText primary="Trending" />
                 </ListItem>
             </Link>
-            <ListItem button>
-                <ListItemIcon> 
-                    <SubscriptionsIcon />
-                </ListItemIcon>
-                <ListItemText primary="Subscriptions" />
-            </ListItem>
+            {!!user && <Link to={'/subscriptions'} className={classes.link}>
+                <ListItem button>
+                    <ListItemIcon> 
+                        <SubscriptionsIcon />
+                    </ListItemIcon>
+                    <ListItemText primary="Subscriptions" />
+                </ListItem>
+            </Link>}
         </div>
     );
 }

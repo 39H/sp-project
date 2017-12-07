@@ -39,6 +39,9 @@ module.exports = (sequelize, DataTypes) => {
         banDate: {
             type: DataTypes.DATEONLY,
             allowNull: true
+        },
+        findPasswordCode: {
+            type: DataTypes.TEXT
         }
     });
 

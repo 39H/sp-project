@@ -24,6 +24,11 @@ class LoginDialogContainer extends Component {
         AuthActions.showRegisterModal();
     };
 
+    handlePassword = () => {
+        const { AuthActions } = this.props;
+        AuthActions.showPasswordModal();
+    };
+
     handleLogin = async () => {
         const { AuthActions, UserActions, form } = this.props;
         const { email, password } = form.toJS();
@@ -34,6 +39,7 @@ class LoginDialogContainer extends Component {
             UserActions.setUser(loginResult);
             AuthActions.setError(null);
             await UserActions.getMyInfo();
+            await UserActions.getSubscriptions();
             this.handleClose();
         } catch(e) {
             console.log(e);
@@ -41,7 +47,7 @@ class LoginDialogContainer extends Component {
     };
 
     render() {
-        const { handleChangeInput, handleClose, handleRegister, handleLogin } = this;
+        const { handleChangeInput, handleClose, handleRegister, handlePassword, handleLogin } = this;
         const { open, form, error, pending } = this.props;
 
         return (
@@ -51,6 +57,7 @@ class LoginDialogContainer extends Component {
                     forms={form}
                     onClose={handleClose}
                     onShowRegister={handleRegister}
+                    onShowPassword={handlePassword}
                     onChangeInput={handleChangeInput}
                     onLogin={handleLogin}
                     pending={pending}

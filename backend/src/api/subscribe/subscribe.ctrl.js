@@ -7,7 +7,7 @@ exports.getSubscriptions = (req, res) => {
     
         User.findById(req.user.id).then(user => {
             user.getCreator().then(results => {
-                const creators = results.map((creator) => { const {userName, displayName} = creator; return {userName, displayName}; });
+                const creators = results.map((creator) => { const {userName, displayName, photo} = creator; return {userName, displayName, photo}; });
                 res.json(creators);
             });
         }).catch(error => {

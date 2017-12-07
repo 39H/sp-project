@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
+import * as userActions from 'store/modules/user';
 import * as portfolioActions from 'store/modules/portfolio';
 
 import Portfolio from 'components/Portfolio';
@@ -24,9 +25,10 @@ class PortfolioContainer extends Component {
     }
 
     handleSubscribe = async () => {
-        const { PortfolioActions, subscribed, userName } = this.props;
+        const { UserActions, PortfolioActions, subscribed, userName } = this.props;
         if(subscribed) await PortfolioActions.unsubscribe({userName});
         else await PortfolioActions.subscribe({userName});
+        UserActions.getSubscriptions();
     };
 
     render() {
@@ -57,6 +59,7 @@ export default connect(
         subscribed: state.portfolio.get('subscribed'),
     }),
     (dispatch) => ({
+        UserActions: bindActionCreators(userActions, dispatch),
         PortfolioActions: bindActionCreators(portfolioActions, dispatch),
     })
 )(PortfolioContainer);

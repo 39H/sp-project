@@ -12,6 +12,8 @@ class WorksContainer extends Component {
         const { ListActions, type } = this.props;
         if(type === 'likes') {
             ListActions.getWorksByLikes();
+        } else if(type === 'subscriptions') {
+            ListActions.getWorksBySubscriptions();
         } else if(type === 'user') {
             const { userName } = this.props;
             ListActions.getWorksByUser({userName});
@@ -47,7 +49,7 @@ class WorksContainer extends Component {
 export default connect(
     (state) => ({
         works: state.list.get('works'),
-        loading: state.pender.pending['list/GET_WORKS_BY_RECENT'] || state.pender.pending['list/GET_WORKS_BY_LIKES']
+        loading: state.pender.pending['list/GET_WORKS_BY_RECENT'] || state.pender.pending['list/GET_WORKS_BY_LIKES'] || state.pender.pending['list/GET_WORKS_BY_SUBSCRIPTIONS'] || state.pender.pending['list/GET_WORKS_BY_USER']
     }),
     (dispatch) => ({
         ListActions: bindActionCreators(listActions, dispatch),

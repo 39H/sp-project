@@ -72,9 +72,9 @@ exports.listByUser = async (req, res) => {
 
         const works = await user.getWorks({order: [['createdAt','DESC']]});
         const results = [];
+        const { displayName, userName } = user;
         await Promise.all(works.map(async work => {
             const { id, subject, thumbnail, likes, createdAt, updatedAt } = work;
-            const { displayName, userName } = user;
 
             results.push({ id, subject, thumbnail, likes, createdAt, updatedAt, displayName, userName });
         }));
@@ -82,5 +82,30 @@ exports.listByUser = async (req, res) => {
         res.json(results);
     } catch(error) {
         res.status(500).json(error);
+    }
+};
+
+exports.listBySubscriptions = async (req, res) => {
+    if(!req.user) {
+        return res.status(403).json({msg: '먼저 로그인 하세요.'});
+    }
+
+    try {
+        const user = await User.findById(req.user.id);
+        const subscriptions = await user.getCreator();
+
+        const results = [];
+        for(let creator of subscriptions) {
+            const works = await creator.getWorks();
+            const { displayName, userName } = creator;
+            for(let work of works) {
+                const { id, subject, thumbnail, likes, createdAt, updatedAt } = work;
+                results.push({ id, subject, thumbnail, likes, createdAt, updatedAt, displayName, userName });
+            }
+        }
+
+        res.json(results);
+    } catch(error) {
+        res.status(500).json({error});
     }
 };

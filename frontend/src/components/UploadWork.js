@@ -3,7 +3,7 @@ import { withStyles } from 'material-ui/styles';
 import AppBar from 'material-ui/AppBar';
 import Tabs, { Tab } from 'material-ui/Tabs';
 
-import { UploadVideoContainer, UploadImageContainer } from 'containers';
+import { UploadVideoContainer, UploadImageContainer, UploadTextContainer } from 'containers';
 
 const styles = theme => ({
     root: {
@@ -28,6 +28,7 @@ const UploadWork = ({ classes, value, onChange }) => {
             </AppBar>
             {value === 'video' && <UploadVideoContainer />}
             {value === 'image' && <UploadImageContainer />}
+            {value === 'text' && <UploadTextContainer />}
         </div>
     );
 };

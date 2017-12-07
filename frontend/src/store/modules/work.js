@@ -19,6 +19,7 @@ const UPLOAD_FILE = 'work/UPLOAD_FILE';
 const SET_WORKID = 'work/SET_WORKID';
 const UPLOAD_THUMBNAIL = 'work/UPLOAD_THUMBNAIL';
 const GET_FILES = 'work/GET_FILES';
+const DELETE_WORK = 'work/DELETE_WORK';
 
 export const getWork = createAction(GET_WORK, WorkAPI.getWork);
 export const getLiked = createAction(GET_LIKED, LikeAPI.getLiked); // ({id})
@@ -31,6 +32,7 @@ export const uploadFile = createAction(UPLOAD_FILE, AttachmentAPI.uploadFile); /
 export const setWorkId = createAction(SET_WORKID, AttachmentAPI.setWorkId); // ({files, WorkId})
 export const uploadThumbnail = createAction(UPLOAD_THUMBNAIL, AttachmentAPI.uploadThumbnail); // ({image})
 export const getFiles = createAction(GET_FILES, AttachmentAPI.getFiles); // ({workid})
+export const deleteWork = createAction(DELETE_WORK, WorkAPI.deleteWork); // ({id})
 
 const initialState = Map({
     work: null,

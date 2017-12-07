@@ -13,3 +13,6 @@ export const writeComment = ({userName, threadId, content}) => axios.post('/api/
 export const getComment = ({userName, threadId, commentId}) => axios.get('/api/community/'+userName+'/'+threadId+'/comment/'+commentId);
 export const patchComment = ({userName, threadId, commentId, content}) => axios.patch('/api/community/'+userName+'/'+threadId+'/comment/'+commentId, {content});
 export const deleteComment = ({userName, threadId, commentId}) => axios.delete('/api/community/'+userName+'/'+threadId+'/comment/'+commentId);
+
+export const getMyThreads = () => axios.get('/api/manage/thread/mine');
+export const getMyComments = () => axios.get('/api/manage/comment/mine');
